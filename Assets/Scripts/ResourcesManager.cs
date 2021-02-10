@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpritesManager : MonoBehaviour
+public class ResourcesManager : MonoBehaviour
 {
     private const int _numberOfColorsForEachSpaceship = 6;
     private const int _numberOfSpaceships = 6;
@@ -15,6 +15,7 @@ public class SpritesManager : MonoBehaviour
         LoadSpaceshipsSprites();
     }
 
+    #region Sprites
     private void InitSpaceshipSpritesDictionary()
     {
         _sprites = new Dictionary<SpaceshipType, Dictionary<SpaceshipColor, Sprite>>();
@@ -39,7 +40,7 @@ public class SpritesManager : MonoBehaviour
         for (int currentSpaceshipNr = 0; currentSpaceshipNr < _numberOfSpaceships; currentSpaceshipNr++)
         {
             SpaceshipType currentType = (SpaceshipType)(currentSpaceshipNr + 1);
-            currentSpaceshipFolder = string.Format(spaceshipFoldersDirectory, string.Format("{0:00}", currentSpaceshipNr+1));
+            currentSpaceshipFolder = string.Format(spaceshipFoldersDirectory, string.Format("{0:00}", currentSpaceshipNr + 1));
             _sprites[currentType] = LoadSpritesByColorOnPath(currentSpaceshipFolder);
         }
     }
@@ -49,7 +50,7 @@ public class SpritesManager : MonoBehaviour
         Sprite[] spritesOnPath = Resources.LoadAll<Sprite>(path);
         Dictionary<SpaceshipColor, Sprite> sprites = new Dictionary<SpaceshipColor, Sprite>();
 
-        if ( spritesOnPath != null)
+        if (spritesOnPath != null)
         {
             for (int i = 0; i < spritesOnPath.Length; i++)
             {
@@ -96,4 +97,7 @@ public class SpritesManager : MonoBehaviour
             return SpaceshipColor.NONE;
         }
     }
+    #endregion
+
+
 }
