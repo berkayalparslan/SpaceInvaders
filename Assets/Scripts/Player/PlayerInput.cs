@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, IInput
 {
     private float _horizontalInput;
     private bool _firing;
@@ -15,6 +15,13 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    public bool Firing
+    {
+        get
+        {
+            return _firing;
+        }
+    }
 
     private void Update()
     {
