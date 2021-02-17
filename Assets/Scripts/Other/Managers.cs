@@ -23,6 +23,26 @@ public class Managers : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private ObjectPool _spaceshipsPool;
+    public ObjectPool SpaceshipsPool
+    {
+        get
+        {
+            return _spaceshipsPool;
+        }
+    }
+
+    [SerializeField]
+    private ResourcesManager _resourcesManager;
+    public ResourcesManager ResourcesManager
+    {
+        get
+        {
+            return _resourcesManager;
+        }
+    }
+
     private void Awake()
     {
         _instance = this;

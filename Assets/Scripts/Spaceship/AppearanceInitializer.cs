@@ -7,7 +7,7 @@ public class AppearanceInitializer : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
 
     
-    private void Start()
+    private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }

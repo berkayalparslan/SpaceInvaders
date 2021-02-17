@@ -6,7 +6,7 @@ public class ResourcesManager : MonoBehaviour
 {
     private const int _numberOfColorsForEachSpaceship = 6;
     private const int _numberOfSpaceships = 6;
-    private Dictionary<SpaceshipType, Dictionary<SpaceshipColor, Sprite>> _sprites;
+    private Dictionary<SpaceshipType, Dictionary<SpaceshipColor, Sprite>> _spaceshipSprites;
     
     
     private void Awake()
@@ -16,18 +16,24 @@ public class ResourcesManager : MonoBehaviour
     }
 
     #region Sprites
+
+    public Sprite GetSpriteBySpaceshipTypeAndColor(SpaceshipType spaceshipType, SpaceshipColor spaceshipColor)
+    {
+        return _spaceshipSprites[spaceshipType][spaceshipColor];
+    }
+
     private void InitSpaceshipSpritesDictionary()
     {
-        _sprites = new Dictionary<SpaceshipType, Dictionary<SpaceshipColor, Sprite>>();
+        _spaceshipSprites = new Dictionary<SpaceshipType, Dictionary<SpaceshipColor, Sprite>>();
 
         for (int i = 0; i < 6; i++)
         {
             SpaceshipType currentType = (SpaceshipType)(i + 1);
-            _sprites.Add(currentType, new Dictionary<SpaceshipColor, Sprite>());
+            _spaceshipSprites.Add(currentType, new Dictionary<SpaceshipColor, Sprite>());
 
             for (int j = 0; j < 6; j++)
             {
-                _sprites[currentType].Add((SpaceshipColor)j, null);
+                _spaceshipSprites[currentType].Add((SpaceshipColor)j, null);
             }
         }
     }
@@ -41,7 +47,7 @@ public class ResourcesManager : MonoBehaviour
         {
             SpaceshipType currentType = (SpaceshipType)(currentSpaceshipNr + 1);
             currentSpaceshipFolder = string.Format(spaceshipFoldersDirectory, string.Format("{0:00}", currentSpaceshipNr + 1));
-            _sprites[currentType] = LoadSpritesByColorOnPath(currentSpaceshipFolder);
+            _spaceshipSprites[currentType] = LoadSpritesByColorOnPath(currentSpaceshipFolder);
         }
     }
 

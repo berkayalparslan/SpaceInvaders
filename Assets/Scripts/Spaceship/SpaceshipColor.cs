@@ -7,5 +7,5 @@
     Orange = 3,
     Purple = 4,
     Red = 5,
-    Yellow = 6
+    Yellow = 6,
 };

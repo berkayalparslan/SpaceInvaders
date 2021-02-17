@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AiInput : MonoBehaviour, IInput
 {
+    private const float _minShootingCooldownTimeInSeconds = 1f;
+    private const float _maxShootingCooldownTimeInSeconds = 12f;
     private const float _maxDistanceFromStartingPosition = 3f;
     private Vector2 _startingPosition;
     private float _direction;
-    private float _shootingTimer;
+    private float _shootingCooldown;
+    private float _currentCooldownTime;
 
     public float HorizontalInput { get; private set; }
     public bool Firing { get; private set; }
@@ -17,21 +21,24 @@ public class AiInput : MonoBehaviour, IInput
     {
         _startingPosition = transform.position;
         HorizontalInput = 1f;
+        SetCooldownTimeRandomly();
     }
 
     private void Update()
     {
-        _shootingTimer += Time.deltaTime;
+        _shootingCooldown += Time.deltaTime;
+        Firing = false;
 
-        if (_shootingTimer > 1f)
+        if (_shootingCooldown > _currentCooldownTime)
         {
-            _shootingTimer = 0f;
-
+            _shootingCooldown = 0f;
             if (CanShoot())
             {
+                SetCooldownTimeRandomly();
                 Firing = true;
             }
         }
+
         if (Mathf.Abs(transform.position.x - _startingPosition.x) >= _maxDistanceFromStartingPosition)
         {
             HorizontalInput *= -1;
@@ -51,5 +58,10 @@ public class AiInput : MonoBehaviour, IInput
             return false;
         }
         return true;
+    }
+
+    private void SetCooldownTimeRandomly()
+    {
+        _currentCooldownTime = Random.Range(_minShootingCooldownTimeInSeconds, _maxShootingCooldownTimeInSeconds);
     }
 }
