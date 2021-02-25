@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AppearanceInitializer : MonoBehaviour
+public class SpaceshipAppearance : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
 

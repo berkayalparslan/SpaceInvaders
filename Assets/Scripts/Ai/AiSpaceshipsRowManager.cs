@@ -13,7 +13,7 @@ public class AiSpaceshipsRowManager : MonoBehaviour
         _aiSpaceshipsCountInScene--;
     }
 
-    private void Start()
+    private void OnGameStarted()
     {
         _rows.AddRange(GetComponentsInChildren<AiSpaceshipsRow>());
         foreach (AiSpaceshipsRow row in _rows)

@@ -100,7 +100,7 @@ public class ResourcesManager : MonoBehaviour
         else
         {
             Debug.LogError("found some sprite file named irregularly!");
-            return SpaceshipColor.NONE;
+            throw new System.Exception();
         }
     }
     #endregion

@@ -5,5 +5,5 @@
     Spoon = 3,
     WineOpener = 4,
     WideHand = 5,
-    DoubleTailed = 6
+    DoubleTailed = 6,
 };

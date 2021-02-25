@@ -43,6 +43,26 @@ public class Managers : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private GameManager _gameManager;
+    public GameManager GameManager
+    {
+        get
+        {
+            return _gameManager;
+        }
+    }
+
+    [SerializeField]
+    private UiManager _uiManager;
+    public UiManager UiManager
+    {
+        get
+        {
+            return _uiManager;
+        }
+    }
+
     private void Awake()
     {
         _instance = this;

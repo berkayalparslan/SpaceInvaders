@@ -48,12 +48,12 @@ public class AiSpaceshipsRow : MonoBehaviour
 
                 if (spaceship != null)
                 {
-                    AppearanceInitializer appearanceInitializer = spaceship.GetComponentInChildren<AppearanceInitializer>();
+                    SpaceshipAppearance appearance = spaceship.GetComponentInChildren<SpaceshipAppearance>();
 
-                    if (appearanceInitializer != null)
+                    if (appearance != null)
                     {
                         Sprite sprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(SpaceshipType.Default, _rowColor);
-                        appearanceInitializer.SetSprite(sprite);
+                        appearance.SetSprite(sprite);
                     }
                     spaceship.transform.SetParent(slot);
                     spaceship.transform.localPosition = Vector3.zero;
