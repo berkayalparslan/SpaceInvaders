@@ -37,11 +37,15 @@ public class SpaceshipShooting : MonoBehaviour
         if (projectile != null)
         {
             ProjectileCollision projectileCollision = projectile.GetComponent<ProjectileCollision>();
-            ProjectileSender senderType = _input as PlayerInput != null ? ProjectileSender.Player : ProjectileSender.Enemy;
-            projectileCollision.SetProjectileSenderType(senderType);
-            projectile.transform.position = _projectileReleasePoint.position;
-            projectile.transform.rotation = _projectileReleasePoint.rotation;
-            projectile.SetActive(true);
+            IProjectileCombat projectileSender = GetComponent<IProjectileCombat>();
+
+            if (projectileSender != null)
+            {
+                projectileCollision.SetProjectileSender(projectileSender);
+                projectile.transform.position = _projectileReleasePoint.position;
+                projectile.transform.rotation = _projectileReleasePoint.rotation;
+                projectile.SetActive(true);
+            }
         }
     }
 }

@@ -2,5 +2,5 @@
 {
     NONE,
     Player,
-    Enemy
+    Ai
 };

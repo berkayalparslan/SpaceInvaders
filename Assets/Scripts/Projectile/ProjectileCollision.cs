@@ -5,10 +5,10 @@ using UnityEngine;
 public class ProjectileCollision : MonoBehaviour
 {
     private CollisionHandler _collisionHandler;
-    private ProjectileSender _projectileSender;
+    private IProjectileCombat _projectileSender;
 
 
-    public void SetProjectileSenderType(ProjectileSender projectileSender)
+    public void SetProjectileSender(IProjectileCombat projectileSender)
     {
         _projectileSender = projectileSender;
     }
@@ -21,26 +21,18 @@ public class ProjectileCollision : MonoBehaviour
 
     private void OnDisable()
     {
-        _projectileSender = ProjectileSender.NONE;
+        _projectileSender = null;
     }
 
     private void OnProjectileCollision(Collider2D collider)
     {
-        if (collider.CompareTag("Enemy"))
+        IProjectileCombat hitCombatParticipant = collider.GetComponent<IProjectileCombat>();
+
+        if (hitCombatParticipant != null)
         {
-            if (_projectileSender == ProjectileSender.Player)
-            {
-                collider.gameObject.SetActive(false);
-                gameObject.SetActive(false);
-            }
+            hitCombatParticipant.ReceiveHit(_projectileSender);
+            gameObject.SetActive(false);
         }
-        if (collider.CompareTag("Player"))
-        {
-            if (_projectileSender == ProjectileSender.Enemy)
-            {
-                collider.gameObject.SetActive(false);
-                gameObject.SetActive(false);
-            }
-        }
+        
     }
 }
