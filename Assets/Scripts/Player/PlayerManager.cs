@@ -8,6 +8,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private SpaceshipAppearance _playerSpaceship;
     private ResourcesManager _resourcesManager;
+    private UiManager _uiManager;
+    [SerializeField]
+    private PlayerCamera _playerCamera;
     private SpaceshipColor _recentSpaceshipColor;
     private SpaceshipType _recentSpaceshipType;
 
@@ -15,8 +18,10 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         _resourcesManager = Managers.Instance.ResourcesManager;
-        Managers.Instance.UiManager.UiSpaceshipColorButtons.OnSpaceshipColorChange += OnSpaceshipColorChanged;
-        Managers.Instance.UiManager.UiSpaceshipTypeSelection.OnSpaceshipTypeChange += OnSpaceshipTypeChanged;
+        _uiManager = Managers.Instance.UiManager;
+        _uiManager.UiSpaceshipColorButtons.OnSpaceshipColorChange += OnSpaceshipColorChanged;
+        _uiManager.UiSpaceshipTypeSelection.OnSpaceshipTypeChange += OnSpaceshipTypeChanged;
+        _uiManager.UiStartMenu.StartGameButton.onClick.AddListener(OnGameStart);
         _recentSpaceshipColor = SpaceshipColor.Blue;
         _recentSpaceshipType = SpaceshipType.Default;
     }
@@ -31,6 +36,13 @@ public class PlayerManager : MonoBehaviour
     {
         _recentSpaceshipType = spaceshipType;
         UpdateSpaceshipAppearance();
+    }
+
+    private void OnGameStart()
+    {
+        _uiManager.HideMainMenuUi();
+        _playerCamera.ChangeCameraToGameView();
+        Managers.Instance.GameManager.StartGame();
     }
 
     private void UpdateSpaceshipAppearance()

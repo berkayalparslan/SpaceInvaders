@@ -13,15 +13,20 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private float _sizeOnGame;
     [SerializeField]
-    private float _movementSpeed;
+    private float _movementDurationInSeconds;
+    [SerializeField]
+    private float _zoomingDurationInSeconds;
     private Vector3 _targetPosition;
+    private float _targetSize;
     private Camera _camera;
 
 
-    public void StartMovingCameraToGamePosition()
+    public void ChangeCameraToGameView()
     {
         _targetPosition = _gamePosition;
+        _targetSize = _sizeOnGame;
         StartCoroutine(MoveCameraToTargetPosition());
+        StartCoroutine(ZoomCameraToTargetSize());
     }
 
     private void Awake()
@@ -36,12 +41,28 @@ public class PlayerCamera : MonoBehaviour
         _camera.orthographicSize = _sizeOnMainMenu;
     }
 
+    private IEnumerator ZoomCameraToTargetSize()
+    {
+        float differenceBetweenSizes = _targetSize - _camera.orthographicSize;
+        while (_camera.orthographicSize != _targetSize)
+        {
+            _camera.orthographicSize += differenceBetweenSizes / _zoomingDurationInSeconds * Time.deltaTime;
+            _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _camera.orthographicSize, _targetSize);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
     private IEnumerator MoveCameraToTargetPosition()
     {
+        float differenceBetweenPositions = Vector3.Distance(_targetPosition, transform.position);
+        Vector3 currentPosition = transform.position;
+
         while (transform.position != _targetPosition)
         {
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, _movementSpeed * Time.deltaTime);
-            _camera.orthographicSize = Mathf.Lerp(_sizeOnMainMenu, _sizeOnGame, _movementSpeed * Time.deltaTime); ;
+            currentPosition += Vector3.up * differenceBetweenPositions / _movementDurationInSeconds * Time.deltaTime;
+            currentPosition.x = Mathf.Clamp(currentPosition.x, currentPosition.x, _targetPosition.x);
+            currentPosition.y = Mathf.Clamp(currentPosition.y, currentPosition.y, _targetPosition.y);
+            transform.position = currentPosition;
             yield return new WaitForEndOfFrame();
         }
     }

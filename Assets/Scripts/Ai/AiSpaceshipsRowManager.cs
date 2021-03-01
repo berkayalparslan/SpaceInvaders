@@ -13,8 +13,14 @@ public class AiSpaceshipsRowManager : MonoBehaviour
         _aiSpaceshipsCountInScene--;
     }
 
-    private void OnGameStarted()
+    private void Awake()
     {
+        Managers.Instance.GameManager.OnGameStart += OnGameStart;
+    }
+
+    private void OnGameStart()
+    {
+        Managers.Instance.GameManager.OnGameStart -= OnGameStart;
         _rows.AddRange(GetComponentsInChildren<AiSpaceshipsRow>());
         foreach (AiSpaceshipsRow row in _rows)
         {

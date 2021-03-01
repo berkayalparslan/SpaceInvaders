@@ -13,11 +13,6 @@ public class ObjectPool : MonoBehaviour
 
     public GameObject GetPoolObject()
     {
-        if (_poolObjects == null)
-        {
-            InitPool();
-        }
-
         if (_poolObjects.Count > 0)
         {
             for (int i = 0; i < _poolObjects.Count; i++)
@@ -33,6 +28,11 @@ public class ObjectPool : MonoBehaviour
         GameObject obj = InstantiatePoolObject();
         _poolObjects.Add(obj);
         return obj;
+    }
+
+    private void Awake()
+    {
+        InitPool();
     }
 
     private void InitPool()

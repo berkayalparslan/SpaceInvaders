@@ -5,10 +5,17 @@ using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
-    public UnityEvent OnGameStart;
+    public event UnityAction OnGameStart;
     private bool _gamePaused;
     private bool _gameStarted = false;
 
+    public bool GameStarted
+    {
+        get
+        {
+            return _gameStarted;
+        }
+    }
 
     private void Awake()
     {
@@ -18,11 +25,11 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         _gameStarted = true;
-        _gameStarted = false;
+        _gamePaused = false;
 
         if (OnGameStart != null)
         {
-            OnGameStart.Invoke();
+            OnGameStart();
         }
     }
 

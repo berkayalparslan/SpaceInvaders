@@ -26,6 +26,11 @@ public class AiInput : MonoBehaviour, IInput
 
     private void Update()
     {
+        if (!Managers.Instance.GameManager.GameStarted)
+        {
+            return;
+        }
+
         _shootingCooldown += Time.deltaTime;
         Firing = false;
 

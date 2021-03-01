@@ -25,6 +25,11 @@ public class PlayerInput : MonoBehaviour, IInput
 
     private void Update()
     {
+        if (!Managers.Instance.GameManager.GameStarted)
+        {
+            return;
+        }
+
         _horizontalInput = Input.GetAxisRaw("Horizontal");
         _firing = Input.GetKey(KeyCode.Space);
     }
