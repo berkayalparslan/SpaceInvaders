@@ -63,6 +63,16 @@ public class Managers : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private PlayerManager _playerManager;
+    public PlayerManager PlayerManager
+    {
+        get
+        {
+            return _playerManager;
+        }
+    }
+
     private void Awake()
     {
         _instance = this;

@@ -10,7 +10,8 @@ public class SpaceshipMovement : MonoBehaviour
     private Vector2 _currentPos;
     private float _maxDistanceChange;
     [SerializeField]
-    private float _movementSpeed;
+    private Vector2 _movementSpeed;
+    private float _dir;
 
 
     private void Awake()
@@ -27,8 +28,15 @@ public class SpaceshipMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!Managers.Instance.GameManager.GameIsRunning)
+        {
+            return;
+        }
+
         _movementVector.x = _input.HorizontalInput;
-        _currentPos += Vector2.right * _movementVector.x * Time.deltaTime * _movementSpeed;
+        _movementVector.y = _input.VerticalInput;
+        _dir = transform.rotation.z == 0 ? 1 : -1;
+        _currentPos += Vector2.one * _movementVector * Time.deltaTime * _movementSpeed * _dir;
         _currentPos.x = Mathf.Clamp(_currentPos.x, _startingPosition.x - _maxDistanceChange, _startingPosition.x + _maxDistanceChange);
         transform.position = _currentPos;
     }

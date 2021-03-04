@@ -22,6 +22,7 @@ public class AiSpaceshipsRowManager : MonoBehaviour
     {
         Managers.Instance.GameManager.OnGameStart -= OnGameStart;
         _rows.AddRange(GetComponentsInChildren<AiSpaceshipsRow>());
+
         foreach (AiSpaceshipsRow row in _rows)
         {
             row.InitRow();

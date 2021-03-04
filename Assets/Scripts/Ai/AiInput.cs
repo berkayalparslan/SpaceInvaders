@@ -8,12 +8,15 @@ public class AiInput : MonoBehaviour, IInput
     private const float _minShootingCooldownTimeInSeconds = 1f;
     private const float _maxShootingCooldownTimeInSeconds = 12f;
     private const float _maxDistanceFromStartingPosition = 3f;
+    private const float _maxVerticalMovementDurationInSeconds = 1f;
     private Vector2 _startingPosition;
     private float _direction;
-    private float _shootingCooldown;
-    private float _currentCooldownTime;
+    private float _shootingCooldownTimerInSeconds;
+    private float _currentCooldownTimeInSeconds;
+    private float _verticalMovementTimerInSeconds = 1f;
 
     public float HorizontalInput { get; private set; }
+    public float VerticalInput { get; private set; }
     public bool Firing { get; private set; }
 
 
@@ -26,17 +29,24 @@ public class AiInput : MonoBehaviour, IInput
 
     private void Update()
     {
-        if (!Managers.Instance.GameManager.GameStarted)
+        if (!Managers.Instance.GameManager.GameIsRunning)
         {
             return;
         }
 
-        _shootingCooldown += Time.deltaTime;
+        _shootingCooldownTimerInSeconds += Time.deltaTime;
+        _verticalMovementTimerInSeconds += Time.deltaTime;
         Firing = false;
 
-        if (_shootingCooldown > _currentCooldownTime)
+        if (_verticalMovementTimerInSeconds > _maxVerticalMovementDurationInSeconds)
         {
-            _shootingCooldown = 0f;
+            VerticalInput = 0f;
+            _verticalMovementTimerInSeconds = 0f;
+        }
+
+        if (_shootingCooldownTimerInSeconds > _currentCooldownTimeInSeconds)
+        {
+            _shootingCooldownTimerInSeconds = 0f;
             if (CanShoot())
             {
                 SetCooldownTimeRandomly();
@@ -47,6 +57,8 @@ public class AiInput : MonoBehaviour, IInput
         if (Mathf.Abs(transform.position.x - _startingPosition.x) >= _maxDistanceFromStartingPosition)
         {
             HorizontalInput *= -1;
+            VerticalInput = 1f;
+            _verticalMovementTimerInSeconds = 0f;
         }
     }
 
@@ -67,6 +79,6 @@ public class AiInput : MonoBehaviour, IInput
 
     private void SetCooldownTimeRandomly()
     {
-        _currentCooldownTime = Random.Range(_minShootingCooldownTimeInSeconds, _maxShootingCooldownTimeInSeconds);
+        _currentCooldownTimeInSeconds = Random.Range(_minShootingCooldownTimeInSeconds, _maxShootingCooldownTimeInSeconds);
     }
 }

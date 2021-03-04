@@ -55,9 +55,8 @@ public class AiSpaceshipsRow : MonoBehaviour
                         Sprite sprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(SpaceshipType.Default, _rowColor);
                         appearance.SetSprite(sprite);
                     }
-                    spaceship.transform.SetParent(slot);
-                    spaceship.transform.localPosition = Vector3.zero;
-                    spaceship.transform.localRotation = Quaternion.identity;
+                    spaceship.transform.position = slot.position;
+                    spaceship.transform.rotation = slot.rotation;
                     spaceship.SetActive(true);
                 }
             }

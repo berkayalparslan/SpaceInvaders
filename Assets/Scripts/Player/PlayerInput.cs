@@ -15,6 +15,14 @@ public class PlayerInput : MonoBehaviour, IInput
         }
     }
 
+    public float VerticalInput
+    {
+        get
+        {
+            return 0f;
+        }
+    }
+
     public bool Firing
     {
         get
@@ -25,7 +33,7 @@ public class PlayerInput : MonoBehaviour, IInput
 
     private void Update()
     {
-        if (!Managers.Instance.GameManager.GameStarted)
+        if (!Managers.Instance.GameManager.GameIsRunning)
         {
             return;
         }

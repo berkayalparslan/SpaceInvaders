@@ -1972,6 +1972,7 @@ MonoBehaviour:
   _resourcesManager: {fileID: 818228102}
   _gameManager: {fileID: 368606264}
   _uiManager: {fileID: 329791280}
+  _playerManager: {fileID: 677058119}
 --- !u!4 &831111381
 Transform:
   m_ObjectHideFlags: 0

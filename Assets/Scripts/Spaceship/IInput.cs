@@ -5,5 +5,6 @@ using UnityEngine;
 public interface IInput
 {
     float HorizontalInput { get; }
+    float VerticalInput { get; }
     bool Firing { get; }
 }
