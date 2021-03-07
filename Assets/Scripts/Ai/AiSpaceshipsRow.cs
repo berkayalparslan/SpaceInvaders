@@ -42,23 +42,27 @@ public class AiSpaceshipsRow : MonoBehaviour
 
         foreach (Transform slot in _slots)
         {
-            if (slot.childCount == 0)
+            GameObject spaceship = spaceshipsPool.GetPoolObject();
+
+            if (spaceship != null)
             {
-                GameObject spaceship = spaceshipsPool.GetPoolObject();
+                SpaceshipAppearance appearance = spaceship.GetComponentInChildren<SpaceshipAppearance>();
+                AiInput aiInput = spaceship.GetComponent<AiInput>();
+                float slotPositionOnX = slot.transform.position.x;
 
-                if (spaceship != null)
+                if (appearance != null)
                 {
-                    SpaceshipAppearance appearance = spaceship.GetComponentInChildren<SpaceshipAppearance>();
-
-                    if (appearance != null)
-                    {
-                        Sprite sprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(SpaceshipType.Default, _rowColor);
-                        appearance.SetSprite(sprite);
-                    }
-                    spaceship.transform.position = slot.position;
-                    spaceship.transform.rotation = slot.rotation;
-                    spaceship.SetActive(true);
+                    Sprite sprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(SpaceshipType.Default, _rowColor);
+                    appearance.SetSprite(sprite);
                 }
+
+                if (aiInput != null)
+                {
+                    aiInput.SetMinAndMaxHorizontalPositions(slotPositionOnX - 3f, slotPositionOnX + 3f);
+                }
+                spaceship.transform.position = slot.position;
+                spaceship.transform.rotation = slot.rotation;
+                spaceship.SetActive(true);
             }
         }
     }
