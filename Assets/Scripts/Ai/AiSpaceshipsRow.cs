@@ -47,7 +47,7 @@ public class AiSpaceshipsRow : MonoBehaviour
             if (spaceship != null)
             {
                 SpaceshipAppearance appearance = spaceship.GetComponentInChildren<SpaceshipAppearance>();
-                AiInput aiInput = spaceship.GetComponent<AiInput>();
+                AiMovement aiMovement = spaceship.GetComponent<AiMovement>();
                 float slotPositionOnX = slot.transform.position.x;
 
                 if (appearance != null)
@@ -56,9 +56,9 @@ public class AiSpaceshipsRow : MonoBehaviour
                     appearance.SetSprite(sprite);
                 }
 
-                if (aiInput != null)
+                if (aiMovement != null)
                 {
-                    aiInput.SetMinAndMaxHorizontalPositions(slotPositionOnX - 3f, slotPositionOnX + 3f);
+                    aiMovement.SetMinAndMaxHorizontalPositions(slotPositionOnX - 3f, slotPositionOnX + 3f);
                 }
                 spaceship.transform.position = slot.position;
                 spaceship.transform.rotation = slot.rotation;
