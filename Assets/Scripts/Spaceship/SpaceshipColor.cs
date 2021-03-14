@@ -7,6 +7,4 @@
     Purple = 4,
     Red = 5,
     Yellow = 6,
-    MIN = Blue,
-    MAX = Yellow,
 };

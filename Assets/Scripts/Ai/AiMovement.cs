@@ -30,7 +30,7 @@ public class AiMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        _movementVector.x = 1f;
+        SetMovementVectorForStart();
     }
 
     void Update()
@@ -42,7 +42,7 @@ public class AiMovement : MonoBehaviour
 
         UpdateVerticalDirection();
         UpdateVerticalPositionChangeDuringVerticalMovement();
-        CheckIfVerticalMovementShouldStopAndResetValuesIfNecessary();
+        StopVerticalMovementIfNecessary();
 
         if (CanMoveHorizontally())
         {
@@ -51,10 +51,13 @@ public class AiMovement : MonoBehaviour
 
         if (ShouldStartVerticalMovement())
         {
-            _numberOfArrivalsOnEdges = 0;
-            _movementVector = new Vector2(0, 1);
-            _yPositionBeforeStartingVerticalMovement = transform.position.y;
+            StartVerticalMovement();
         }
+    }
+
+    private void SetMovementVectorForStart()
+    {
+        _movementVector = new Vector2(1f, 0f);
     }
 
     private void UpdateVerticalDirection()
@@ -67,13 +70,38 @@ public class AiMovement : MonoBehaviour
         _verticalPositionChangeDuringVerticalMovement = Mathf.Abs(transform.position.y - _yPositionBeforeStartingVerticalMovement);
     }
 
-    private void CheckIfVerticalMovementShouldStopAndResetValuesIfNecessary()
+    private void StopVerticalMovementIfNecessary()
     {
         if (ShouldStopVerticalMovement())
         {
-            _movementVector.y = 0f;
-            _yPositionBeforeStartingVerticalMovement = float.MaxValue;
+            StopVerticalMovement();
         }
+    }
+
+    private bool ShouldStopVerticalMovement()
+    {
+        return HasCompletedVerticalMovement() && MovesVertically() && VerticalPositionWasCachedBeforeStartingVerticalMovement();
+    }
+
+    private bool HasCompletedVerticalMovement()
+    {
+        return _verticalPositionChangeDuringVerticalMovement > _verticalMovementDistance;
+    }
+
+    private bool MovesVertically()
+    {
+        return _movementVector.y != 0;
+    }
+
+    private bool VerticalPositionWasCachedBeforeStartingVerticalMovement()
+    {
+        return _yPositionBeforeStartingVerticalMovement != float.MaxValue;
+    }
+
+    private void StopVerticalMovement()
+    {
+        _movementVector.y = 0f;
+        _yPositionBeforeStartingVerticalMovement = float.MaxValue;
     }
 
     private bool CanMoveHorizontally()
@@ -100,8 +128,10 @@ public class AiMovement : MonoBehaviour
         return _numberOfArrivalsOnEdges > 2;
     }
 
-    private bool ShouldStopVerticalMovement()
+    private void StartVerticalMovement()
     {
-        return _verticalPositionChangeDuringVerticalMovement > _verticalMovementDistance && _movementVector.y != 0 && _yPositionBeforeStartingVerticalMovement != float.MaxValue;
+        _numberOfArrivalsOnEdges = 0;
+        _movementVector = new Vector2(0, 1);
+        _yPositionBeforeStartingVerticalMovement = transform.position.y;
     }
 }

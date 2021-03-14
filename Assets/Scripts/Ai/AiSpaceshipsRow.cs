@@ -6,6 +6,7 @@ public class AiSpaceshipsRow : MonoBehaviour
 {
     private List<Transform> _slots = new List<Transform>();
     private SpaceshipColor _rowColor;
+    private SpaceshipType _rowSpaceshipType;
 
     public int SlotsCount
     {
@@ -15,10 +16,26 @@ public class AiSpaceshipsRow : MonoBehaviour
         }
     }
 
+    public SpaceshipColor SpaceshipColorOnThisRow
+    {
+        get
+        {
+            return _rowColor;
+        }
+    }
+
+    public SpaceshipType SpaceshipTypeOnThisRow
+    {
+        get
+        {
+            return _rowSpaceshipType;
+        }
+    }
 
     public void InitRow()
     {
         SetRowColorRandomly();
+        SetRowSpaceshipTypeRandomly();
         FillSlotsWithSpaceships();
     }
 
@@ -32,7 +49,16 @@ public class AiSpaceshipsRow : MonoBehaviour
 
     private void SetRowColorRandomly()
     {
-        _rowColor = (SpaceshipColor)Random.Range((int)SpaceshipColor.Blue, (int)SpaceshipColor.Yellow + 1);
+        int spaceshipColorMinValue = (int) SpaceshipHelper.GetSpaceshipColorMinValue();
+        int spaceshipColorMaxValue = (int) SpaceshipHelper.GetSpaceshipColorMaxValue();
+        _rowColor = (SpaceshipColor)Random.Range(spaceshipColorMinValue, spaceshipColorMaxValue + 1);
+    }
+
+    private void SetRowSpaceshipTypeRandomly()
+    {
+        int spaceshipTypeMinValue = (int)SpaceshipHelper.GetSpaceshipTypeMinValue();
+        int spaceshipTypeMaxValue = (int)SpaceshipHelper.GetSpaceshipTypeMaxValue();
+        _rowSpaceshipType = (SpaceshipType)Random.Range(spaceshipTypeMinValue, spaceshipTypeMaxValue + 1);
     }
 
     private void FillSlotsWithSpaceships()
@@ -46,23 +72,12 @@ public class AiSpaceshipsRow : MonoBehaviour
 
             if (spaceship != null)
             {
-                SpaceshipAppearance appearance = spaceship.GetComponentInChildren<SpaceshipAppearance>();
-                AiMovement aiMovement = spaceship.GetComponent<AiMovement>();
-                float slotPositionOnX = slot.transform.position.x;
+                AiSpaceship aiSpaceship = spaceship.GetComponent<AiSpaceship>();
 
-                if (appearance != null)
+                if (aiSpaceship != null)
                 {
-                    Sprite sprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(SpaceshipType.Default, _rowColor);
-                    appearance.SetSprite(sprite);
+                    aiSpaceship.InitSpaceshipBeforeActivating(this, slot);
                 }
-
-                if (aiMovement != null)
-                {
-                    aiMovement.SetMinAndMaxHorizontalPositions(slotPositionOnX - 3f, slotPositionOnX + 3f);
-                }
-                spaceship.transform.position = slot.position;
-                spaceship.transform.rotation = slot.rotation;
-                spaceship.SetActive(true);
             }
         }
     }

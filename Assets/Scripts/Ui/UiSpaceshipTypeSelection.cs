@@ -54,7 +54,7 @@ public class UiSpaceshipTypeSelection : MonoBehaviour
     {
         _previousTypeButton.onClick.AddListener(OnPreviousTypeButtonClicked);
         _nextTypeButton.onClick.AddListener(OnNextTypeButtonClicked);
-        //Setup();
+        Setup();
     }
 
     private void OnDestroy()

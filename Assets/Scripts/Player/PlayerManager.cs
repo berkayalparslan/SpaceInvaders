@@ -98,5 +98,4 @@ public class PlayerManager : MonoBehaviour
             _playerSpaceship.SetSprite(sprite);
         }
     }
-
 }
