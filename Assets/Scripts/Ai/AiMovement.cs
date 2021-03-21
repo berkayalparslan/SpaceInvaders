@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class AiMovement : MonoBehaviour
 {
-    private float _verticalDirection;
+    private const float _minDefaultTimeBetweenVerticalMovements = 5f;
+    private const float _maxDefaultTimeBetweenVerticalMovements = 10f;
+    private const float _horizontalPositionsOffset = 2f;
+    private float _timeLeftBeforeNextVerticalMovement;
     private float _yPositionBeforeStartingVerticalMovement;
     private float _verticalPositionChangeDuringVerticalMovement;
-    private float _numberOfArrivalsOnEdges;
     private float _verticalMovementDistance = 1f;
+    private float _horizontalMovementDirectionBeforeStartingVerticalMovement;
     private float _minHorizontalPosition;
     private float _maxHorizontalPosition;
+    private float _newMinHorizontalPosition;
+    private float _newMaxHorizontalPosition;
+    private bool _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds;
     private Vector2 _movementVector;
 
     public Vector2 MovementVector 
@@ -22,31 +28,50 @@ public class AiMovement : MonoBehaviour
     }
 
 
-    public void SetMinAndMaxHorizontalPositions(float min, float max)
+    public void SetMinAndMaxHorizontalPositionsOrQueueThemIfAiMovesVertically(float minHorizontal, float maxHorizontal)
     {
-        _minHorizontalPosition = min;
-        _maxHorizontalPosition = max;
+        //if (MovesVertically())
+        //{
+        //    SetNewMinAndMaxHorizontalPositions(minHorizontal, maxHorizontal);
+        //    _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds = true;
+        //    return;
+        //}
+        SetMinAndMaxHorizontalPositions(minHorizontal, maxHorizontal);
+    }
+
+    private void SetNewMinAndMaxHorizontalPositions(float minHorizontal, float maxHorizontal)
+    {
+        _newMinHorizontalPosition = minHorizontal;
+        _newMaxHorizontalPosition = maxHorizontal;
+    }
+
+    private void SetMinAndMaxHorizontalPositions(float minHorizontal,float maxHorizontal)
+    {
+        _minHorizontalPosition = minHorizontal + _horizontalPositionsOffset;
+        _maxHorizontalPosition = maxHorizontal - _horizontalPositionsOffset;
     }
 
     private void OnEnable()
     {
         SetMovementVectorForStart();
+        SetRandomTimeBeforeNextVerticalMovement();
     }
 
-    void Update()
+    private void Update()
     {
         if (!Managers.Instance.GameManager.GameIsRunning)
         {
             return;
         }
 
-        UpdateVerticalDirection();
         UpdateVerticalPositionChangeDuringVerticalMovement();
+        UpdateVerticalMovementTimeCounterIfNotMovingVertically();
         StopVerticalMovementIfNecessary();
+        //UpdateMinAndMaxHorizontalPositionsIfVerticalMovementHasEnded();
 
         if (CanMoveHorizontally())
         {
-            UpdateHorizontalMovementValuesAndCountArrivalsOnEdges();
+            UpdateHorizontalMovementValues();
         }
 
         if (ShouldStartVerticalMovement())
@@ -60,9 +85,12 @@ public class AiMovement : MonoBehaviour
         _movementVector = new Vector2(1f, 0f);
     }
 
-    private void UpdateVerticalDirection()
+    private void UpdateVerticalMovementTimeCounterIfNotMovingVertically()
     {
-        _verticalDirection = (transform.rotation.eulerAngles.z + 360) % 360 == 180 ? -1f : 1f;
+        if (_movementVector.y == 0)
+        {
+            _timeLeftBeforeNextVerticalMovement -= Time.deltaTime;
+        }
     }
 
     private void UpdateVerticalPositionChangeDuringVerticalMovement()
@@ -100,8 +128,25 @@ public class AiMovement : MonoBehaviour
 
     private void StopVerticalMovement()
     {
+        _movementVector.x = _horizontalMovementDirectionBeforeStartingVerticalMovement;
         _movementVector.y = 0f;
         _yPositionBeforeStartingVerticalMovement = float.MaxValue;
+    }
+
+    private void UpdateMinAndMaxHorizontalPositionsIfVerticalMovementHasEnded()
+    {
+        if (ShouldUpdateMinAndMaxHorizontalPositions())
+        {
+            _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds = false;
+            SetMinAndMaxHorizontalPositions(_newMinHorizontalPosition, _newMaxHorizontalPosition);
+            _newMinHorizontalPosition = 0f;
+            _newMaxHorizontalPosition = 0f;
+        }
+    }
+
+    private bool ShouldUpdateMinAndMaxHorizontalPositions()
+    {
+        return !MovesVertically() && _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds;
     }
 
     private bool CanMoveHorizontally()
@@ -109,29 +154,33 @@ public class AiMovement : MonoBehaviour
         return _movementVector.y == 0f;
     }
 
-    private void UpdateHorizontalMovementValuesAndCountArrivalsOnEdges()
+    private void UpdateHorizontalMovementValues()
     {
         if (transform.position.x < _minHorizontalPosition)
         {
-            _movementVector.x = -1f;
-            _numberOfArrivalsOnEdges++;
+              _movementVector.x = -1f;
         }
         if (transform.position.x > _maxHorizontalPosition)
         {
             _movementVector.x = 1f;
-            _numberOfArrivalsOnEdges++;
         }
     }
 
     private bool ShouldStartVerticalMovement()
     {
-        return _numberOfArrivalsOnEdges > 2;
+        return _timeLeftBeforeNextVerticalMovement < 0f;
     }
 
     private void StartVerticalMovement()
     {
-        _numberOfArrivalsOnEdges = 0;
+        SetRandomTimeBeforeNextVerticalMovement();
+        _horizontalMovementDirectionBeforeStartingVerticalMovement = _movementVector.x;
         _movementVector = new Vector2(0, 1);
         _yPositionBeforeStartingVerticalMovement = transform.position.y;
+    }
+
+    private void SetRandomTimeBeforeNextVerticalMovement()
+    {
+        _timeLeftBeforeNextVerticalMovement = AiSpaceshipsRow.TimeBetweenVerticalMovements;
     }
 }

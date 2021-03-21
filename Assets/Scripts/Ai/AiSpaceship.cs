@@ -1,43 +1,53 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AiSpaceship : MonoBehaviour
 {
-    private const float _defaultHorizontalDistance = 3f;
+    public event UnityAction<AiSpaceship> OnSpaceshipDisable;
     [SerializeField]
     private SpaceshipAppearance _spaceshipAppearance;
     [SerializeField]
     private AiMovement _aiMovement;
-    private AiSpaceshipsRow _row;
 
 
-    public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Transform aiSpaceshipSlot)
+    public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange)
     {
-        _row = aiSpaceshipsRow;
-
-        SetSpaceshipSprite();
-        SetHorizontalMovementBorders(aiSpaceshipSlot.position.x - _defaultHorizontalDistance, aiSpaceshipSlot.position.x + _defaultHorizontalDistance);
-        AssignPositionAndRotationFromTransform(aiSpaceshipSlot);
+        SetSpaceshipSprite(aiSpaceshipsRow);
+        AssignPositionAndRotation(origin, rotation);
         EnableObject();
     }
 
-    private void SetSpaceshipSprite()
+    public void SetHorizontalMovementBorders(Vector3 origin, float movementRange)
+    {
+        _aiMovement.SetMinAndMaxHorizontalPositionsOrQueueThemIfAiMovesVertically(origin.x - movementRange, origin.x + movementRange);
+    }
+
+    private void OnDisable()
+    {
+        if (OnSpaceshipDisable != null)
+        {
+            OnSpaceshipDisable(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        OnSpaceshipDisable = null;
+    }
+
+    private void SetSpaceshipSprite(AiSpaceshipsRow aiSpaceshipsRow)
     {
         ResourcesManager resourcesManager = Managers.Instance.ResourcesManager;
-        Sprite spaceshipSprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(_row.SpaceshipTypeOnThisRow, _row.SpaceshipColorOnThisRow);
+        Sprite spaceshipSprite = resourcesManager.GetSpriteBySpaceshipTypeAndColor(aiSpaceshipsRow.SpaceshipTypeOnThisRow, aiSpaceshipsRow.SpaceshipColorOnThisRow);
         _spaceshipAppearance.SetSprite(spaceshipSprite);
     }
 
-    private void SetHorizontalMovementBorders(float min, float max)
+    private void AssignPositionAndRotation(Vector3 position, Quaternion rotation)
     {
-        _aiMovement.SetMinAndMaxHorizontalPositions(min, max);
-    }
-
-    private void AssignPositionAndRotationFromTransform(Transform transform)
-    {
-        this.transform.position = transform.position;
-        this.transform.rotation = transform.rotation;
+        this.transform.position = position;
+        this.transform.rotation = rotation;
     }
 
     private void EnableObject()

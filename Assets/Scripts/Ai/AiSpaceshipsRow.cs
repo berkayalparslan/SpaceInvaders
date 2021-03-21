@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class AiSpaceshipsRow : MonoBehaviour
 {
-    private List<Transform> _slots = new List<Transform>();
-    private SpaceshipColor _rowColor;
+    private static Stack<SpaceshipType> _typesRandomlySorted = new Stack<SpaceshipType>();
+    private static Stack<SpaceshipColor> _colorsRandomlySorted = new Stack<SpaceshipColor>();
+    private static float _timeBetweenVerticalMovements;
+    private const float _minDefaultTimeBetweenVerticalMovements = 5f;
+    private const float _maxDefaultTimeBetweenVerticalMovements = 10f;
+    private const float _leftBorder = -30f;
+    private const float _rightBorder = 30f;
+    private const int _numberOfSpaceshipsInRow = 10;
+    private List<AiSpaceship> _spaceships = new List<AiSpaceship>();
+    private float _maxDistanceFromOriginPerSpaceship;
+    private SpaceshipColor _rowSpaceshipColor;
     private SpaceshipType _rowSpaceshipType;
 
-    public int SlotsCount
+#if UNITY_EDITOR
+    public int DEBUG_NumberOfSpaceshipsInRow;
+#endif
+
+    public static float TimeBetweenVerticalMovements
     {
         get
         {
-            return _slots.Count;
+            return _timeBetweenVerticalMovements;
         }
     }
 
@@ -20,7 +33,7 @@ public class AiSpaceshipsRow : MonoBehaviour
     {
         get
         {
-            return _rowColor;
+            return _rowSpaceshipColor;
         }
     }
 
@@ -32,53 +45,140 @@ public class AiSpaceshipsRow : MonoBehaviour
         }
     }
 
+
     public void InitRow()
     {
-        SetRowColorRandomly();
-        SetRowSpaceshipTypeRandomly();
-        FillSlotsWithSpaceships();
+        int numberofSpaceshipsInRow;
+#if UNITY_EDITOR
+        numberofSpaceshipsInRow = DEBUG_NumberOfSpaceshipsInRow != 0 ? DEBUG_NumberOfSpaceshipsInRow : _numberOfSpaceshipsInRow;
+#else
+        numberofSpaceshipsInRow = _numberOfSpaceshipsInRow;
+#endif
+        SetRowSpaceshipColor();
+        SetRowSpaceshipType();
+        FillSlotsWithSpaceships(numberofSpaceshipsInRow);
     }
 
     private void Awake()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        SortAndSetSpaceshipColorsRandomly();
+        SortAndSetSpaceshipTypesRandomly();
+        SetTimeBetweenVerticalMovementsRandomly();
+    }
+
+    private void OnDestroy()
+    {
+        _colorsRandomlySorted.Clear();
+        _typesRandomlySorted.Clear();
+    }
+
+    private void SortAndSetSpaceshipColorsRandomly()
+    {
+        List<SpaceshipColor> spaceshipsColors = new List<SpaceshipColor>(SpaceshipHelper.GetSpaceshipColors());
+        int randomIndex = 0;
+        _colorsRandomlySorted.Clear();
+
+        while (spaceshipsColors.Count > 0)
         {
-            _slots.Add(transform.GetChild(i));
+            randomIndex = Random.Range(0, spaceshipsColors.Count);
+            _colorsRandomlySorted.Push(spaceshipsColors[randomIndex]);
+            spaceshipsColors.RemoveAt(randomIndex);
         }
     }
 
-    private void SetRowColorRandomly()
+    private void SortAndSetSpaceshipTypesRandomly()
     {
-        int spaceshipColorMinValue = (int) SpaceshipHelper.GetSpaceshipColorMinValue();
-        int spaceshipColorMaxValue = (int) SpaceshipHelper.GetSpaceshipColorMaxValue();
-        _rowColor = (SpaceshipColor)Random.Range(spaceshipColorMinValue, spaceshipColorMaxValue + 1);
+        List<SpaceshipType> spaceshipsTypes = new List<SpaceshipType>(SpaceshipHelper.GetSpaceshipTypes());
+        int randomIndex = 0;
+        _typesRandomlySorted.Clear();
+
+        while (spaceshipsTypes.Count > 0)
+        {
+            randomIndex = Random.Range(0, spaceshipsTypes.Count);
+            _typesRandomlySorted.Push(spaceshipsTypes[randomIndex]);
+            spaceshipsTypes.RemoveAt(randomIndex);
+        }
     }
 
-    private void SetRowSpaceshipTypeRandomly()
+    private void SetRowSpaceshipColor()
     {
-        int spaceshipTypeMinValue = (int)SpaceshipHelper.GetSpaceshipTypeMinValue();
-        int spaceshipTypeMaxValue = (int)SpaceshipHelper.GetSpaceshipTypeMaxValue();
-        _rowSpaceshipType = (SpaceshipType)Random.Range(spaceshipTypeMinValue, spaceshipTypeMaxValue + 1);
+        if (_colorsRandomlySorted.Count == 0)
+        {
+            SortAndSetSpaceshipColorsRandomly();
+        }
+        _rowSpaceshipColor = _colorsRandomlySorted.Pop();
     }
 
-    private void FillSlotsWithSpaceships()
+    private void SetRowSpaceshipType()
+    {
+        if (_typesRandomlySorted.Count == 0)
+        {
+            SortAndSetSpaceshipTypesRandomly();
+        }
+        _rowSpaceshipType = _typesRandomlySorted.Pop();
+    }
+
+    private void FillSlotsWithSpaceships(int numberOfSpaceships)
     {
         ObjectPool spaceshipsPool = Managers.Instance.SpaceshipsPool;
-        ResourcesManager resourcesManager = Managers.Instance.ResourcesManager;
-
-        foreach (Transform slot in _slots)
+        GameObject spaceshipFromPool = null;
+        AiSpaceship aiSpaceship = null;
+        Vector3 origin;
+        CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(numberOfSpaceships);
+        
+        for (int i = 0; i < numberOfSpaceships; i++)
         {
-            GameObject spaceship = spaceshipsPool.GetPoolObject();
+            spaceshipFromPool = spaceshipsPool.GetPoolObject();
 
-            if (spaceship != null)
+            if (spaceshipFromPool != null)
             {
-                AiSpaceship aiSpaceship = spaceship.GetComponent<AiSpaceship>();
+                aiSpaceship = spaceshipFromPool.GetComponent<AiSpaceship>();
 
                 if (aiSpaceship != null)
                 {
-                    aiSpaceship.InitSpaceshipBeforeActivating(this, slot);
+                    origin = GetOriginPositionByIndex(i, transform);
+                    aiSpaceship.InitSpaceshipBeforeActivating(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship);
+                    aiSpaceship.SetHorizontalMovementBorders(origin, _maxDistanceFromOriginPerSpaceship);
+                    aiSpaceship.OnSpaceshipDisable += OnSpaceshipDisabled;
+                    _spaceships.Add(aiSpaceship);
                 }
             }
         }
+    }
+
+    private Vector3 GetOriginPositionByIndex(int index, Transform transformForXZAxis)
+    {
+        return new Vector3(_leftBorder + _maxDistanceFromOriginPerSpaceship * (index + 1) + (index * _maxDistanceFromOriginPerSpaceship), transformForXZAxis.position.y, transform.position.z);
+    }
+
+    private void CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(int numberOfSpaceships)
+    {
+        _maxDistanceFromOriginPerSpaceship = Mathf.Abs(_rightBorder - _leftBorder) / numberOfSpaceships * 0.5f;
+    }
+
+    private void OnSpaceshipDisabled(AiSpaceship aiSpaceship)
+    {
+        aiSpaceship.OnSpaceshipDisable -= OnSpaceshipDisabled;
+        _spaceships.Remove(aiSpaceship);
+        CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(_spaceships.Count);
+        UpdateSpaceships();
+    }
+
+    private void UpdateSpaceships()
+    {
+        AiSpaceship spaceship = null;
+        Vector3 origin;
+
+        for (int i = 0; i < _spaceships.Count; i++)
+        {
+            spaceship = _spaceships[i];
+            origin = GetOriginPositionByIndex(i, spaceship.transform);
+            spaceship.SetHorizontalMovementBorders(origin, _maxDistanceFromOriginPerSpaceship);
+        }
+    }
+
+    private static void SetTimeBetweenVerticalMovementsRandomly()
+    {
+        _timeBetweenVerticalMovements = Random.Range(_minDefaultTimeBetweenVerticalMovements, _maxDefaultTimeBetweenVerticalMovements);
     }
 }
