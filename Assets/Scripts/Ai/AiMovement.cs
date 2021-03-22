@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class AiMovement : MonoBehaviour
 {
-    private const float _minDefaultTimeBetweenVerticalMovements = 5f;
-    private const float _maxDefaultTimeBetweenVerticalMovements = 10f;
-    private const float _horizontalPositionsOffset = 2f;
+    private const float _horizontalPositionOffset = 2f;
     private float _timeLeftBeforeNextVerticalMovement;
     private float _yPositionBeforeStartingVerticalMovement;
     private float _verticalPositionChangeDuringVerticalMovement;
@@ -14,9 +12,6 @@ public class AiMovement : MonoBehaviour
     private float _horizontalMovementDirectionBeforeStartingVerticalMovement;
     private float _minHorizontalPosition;
     private float _maxHorizontalPosition;
-    private float _newMinHorizontalPosition;
-    private float _newMaxHorizontalPosition;
-    private bool _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds;
     private Vector2 _movementVector;
 
     public Vector2 MovementVector 
@@ -28,33 +23,21 @@ public class AiMovement : MonoBehaviour
     }
 
 
-    public void SetMinAndMaxHorizontalPositionsOrQueueThemIfAiMovesVertically(float minHorizontal, float maxHorizontal)
+    public void SetMinAndMaxHorizontalPositions(float minHorizontal, float maxHorizontal)
     {
-        //if (MovesVertically())
-        //{
-        //    SetNewMinAndMaxHorizontalPositions(minHorizontal, maxHorizontal);
-        //    _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds = true;
-        //    return;
-        //}
-        SetMinAndMaxHorizontalPositions(minHorizontal, maxHorizontal);
-    }
-
-    private void SetNewMinAndMaxHorizontalPositions(float minHorizontal, float maxHorizontal)
-    {
-        _newMinHorizontalPosition = minHorizontal;
-        _newMaxHorizontalPosition = maxHorizontal;
-    }
-
-    private void SetMinAndMaxHorizontalPositions(float minHorizontal,float maxHorizontal)
-    {
-        _minHorizontalPosition = minHorizontal + _horizontalPositionsOffset;
-        _maxHorizontalPosition = maxHorizontal - _horizontalPositionsOffset;
+        _minHorizontalPosition = minHorizontal + _horizontalPositionOffset;
+        _maxHorizontalPosition = maxHorizontal - _horizontalPositionOffset;
     }
 
     private void OnEnable()
     {
         SetMovementVectorForStart();
-        SetRandomTimeBeforeNextVerticalMovement();
+        SetTimeBeforeNextVerticalMovement();
+    }
+
+    private void SetMovementVectorForStart()
+    {
+        _movementVector = new Vector2(1f, 0f);
     }
 
     private void Update()
@@ -65,13 +48,12 @@ public class AiMovement : MonoBehaviour
         }
 
         UpdateVerticalPositionChangeDuringVerticalMovement();
-        UpdateVerticalMovementTimeCounterIfNotMovingVertically();
+        UpdateTimeCountdownBeforeNextVerticalMovementStartIfNotMovingVertically();
         StopVerticalMovementIfNecessary();
-        //UpdateMinAndMaxHorizontalPositionsIfVerticalMovementHasEnded();
 
         if (CanMoveHorizontally())
         {
-            UpdateHorizontalMovementValues();
+            UpdateMovementVectorForHorizontalMovement();
         }
 
         if (ShouldStartVerticalMovement())
@@ -80,22 +62,17 @@ public class AiMovement : MonoBehaviour
         }
     }
 
-    private void SetMovementVectorForStart()
+    private void UpdateVerticalPositionChangeDuringVerticalMovement()
     {
-        _movementVector = new Vector2(1f, 0f);
+        _verticalPositionChangeDuringVerticalMovement = Mathf.Abs(transform.position.y - _yPositionBeforeStartingVerticalMovement);
     }
 
-    private void UpdateVerticalMovementTimeCounterIfNotMovingVertically()
+    private void UpdateTimeCountdownBeforeNextVerticalMovementStartIfNotMovingVertically()
     {
         if (_movementVector.y == 0)
         {
             _timeLeftBeforeNextVerticalMovement -= Time.deltaTime;
         }
-    }
-
-    private void UpdateVerticalPositionChangeDuringVerticalMovement()
-    {
-        _verticalPositionChangeDuringVerticalMovement = Mathf.Abs(transform.position.y - _yPositionBeforeStartingVerticalMovement);
     }
 
     private void StopVerticalMovementIfNecessary()
@@ -133,32 +110,16 @@ public class AiMovement : MonoBehaviour
         _yPositionBeforeStartingVerticalMovement = float.MaxValue;
     }
 
-    private void UpdateMinAndMaxHorizontalPositionsIfVerticalMovementHasEnded()
-    {
-        if (ShouldUpdateMinAndMaxHorizontalPositions())
-        {
-            _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds = false;
-            SetMinAndMaxHorizontalPositions(_newMinHorizontalPosition, _newMaxHorizontalPosition);
-            _newMinHorizontalPosition = 0f;
-            _newMaxHorizontalPosition = 0f;
-        }
-    }
-
-    private bool ShouldUpdateMinAndMaxHorizontalPositions()
-    {
-        return !MovesVertically() && _updateMinAndMaxHorizontalPositionsAfterVerticalMovementEnds;
-    }
-
     private bool CanMoveHorizontally()
     {
         return _movementVector.y == 0f;
     }
 
-    private void UpdateHorizontalMovementValues()
+    private void UpdateMovementVectorForHorizontalMovement()
     {
         if (transform.position.x < _minHorizontalPosition)
         {
-              _movementVector.x = -1f;
+            _movementVector.x = -1f;
         }
         if (transform.position.x > _maxHorizontalPosition)
         {
@@ -173,13 +134,13 @@ public class AiMovement : MonoBehaviour
 
     private void StartVerticalMovement()
     {
-        SetRandomTimeBeforeNextVerticalMovement();
+        SetTimeBeforeNextVerticalMovement();
         _horizontalMovementDirectionBeforeStartingVerticalMovement = _movementVector.x;
         _movementVector = new Vector2(0, 1);
         _yPositionBeforeStartingVerticalMovement = transform.position.y;
     }
 
-    private void SetRandomTimeBeforeNextVerticalMovement()
+    private void SetTimeBeforeNextVerticalMovement()
     {
         _timeLeftBeforeNextVerticalMovement = AiSpaceshipsRow.TimeBetweenVerticalMovements;
     }

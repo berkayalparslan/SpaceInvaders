@@ -37,7 +37,7 @@ public class SpaceshipShooting : MonoBehaviour
         if (projectile != null)
         {
             ProjectileCollision projectileCollision = projectile.GetComponent<ProjectileCollision>();
-            IProjectileCombat projectileSender = GetComponent<IProjectileCombat>();
+            CombatParticipant projectileSender = GetComponent<CombatParticipant>();
 
             if (projectileSender != null)
             {

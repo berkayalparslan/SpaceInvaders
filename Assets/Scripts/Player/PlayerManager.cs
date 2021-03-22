@@ -19,6 +19,13 @@ public class PlayerManager : MonoBehaviour
     private SpaceshipType _recentSpaceshipType;
     private short _playerLivesLeft = _maxPlayerLives;
 
+    public SpaceshipType RecentSpaceshipType
+    {
+        get
+        {
+            return _recentSpaceshipType;
+        }
+    }
 
     private void Awake()
     {

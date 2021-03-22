@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiCombat : MonoBehaviour, IProjectileCombat
+public class AiCombat : CombatParticipant
 {
-    public ProjectileSender SenderType
+    protected override bool CanBeHit(ICombatParticipant combatParticipant)
     {
-        get
-        {
-            return ProjectileSender.Ai;
-        }
+        return !IsHitBySameTypeOfObject(combatParticipant);
     }
 
-    public void ReceiveHit(IProjectileCombat combatSender)
+    protected override void ProceedWithHit(ICombatParticipant combatParticipant)
     {
-        if (combatSender.SenderType != ProjectileSender.Ai)
-        {
-            gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
     }
 }

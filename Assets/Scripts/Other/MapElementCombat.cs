@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapElementCombat : MonoBehaviour, IProjectileCombat
+public class MapElementCombat : CombatParticipant
 {
-    public ProjectileSender SenderType
+    protected override bool CanBeHit(ICombatParticipant combatParticipant)
     {
-        get
-        {
-            return ProjectileSender.NONE;
-        }
+        return (combatParticipant as MapElementCombat) == null;
     }
 
-    public void ReceiveHit(IProjectileCombat combatSender)
+    protected override void ProceedWithHit(ICombatParticipant combatParticipant)
     {
-        if (!gameObject.CompareTag("MapBorder"))
-        {
-            gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
     }
 }

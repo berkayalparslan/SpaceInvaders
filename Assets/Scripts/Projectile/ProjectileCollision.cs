@@ -5,10 +5,18 @@ using UnityEngine;
 public class ProjectileCollision : MonoBehaviour
 {
     private CollisionHandler _collisionHandler;
-    private IProjectileCombat _projectileSender;
+    private CombatParticipant _projectileSender;
+
+    public CombatParticipant ProjectileSender
+    {
+        get
+        {
+            return _projectileSender;
+        }
+    }
 
 
-    public void SetProjectileSender(IProjectileCombat projectileSender)
+    public void SetProjectileSender(CombatParticipant projectileSender)
     {
         _projectileSender = projectileSender;
     }
@@ -26,7 +34,7 @@ public class ProjectileCollision : MonoBehaviour
 
     private void OnProjectileCollision(Collider2D collider)
     {
-        IProjectileCombat hitCombatParticipant = collider.GetComponent<IProjectileCombat>();
+        CombatParticipant hitCombatParticipant = collider.GetComponent<CombatParticipant>();
 
         if (hitCombatParticipant != null)
         {

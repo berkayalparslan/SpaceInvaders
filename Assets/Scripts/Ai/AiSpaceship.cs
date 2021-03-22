@@ -10,18 +10,27 @@ public class AiSpaceship : MonoBehaviour
     private SpaceshipAppearance _spaceshipAppearance;
     [SerializeField]
     private AiMovement _aiMovement;
+    [SerializeField]
+    private SpaceshipMovement _spaceshipMovement;
 
 
-    public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange)
+    public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange, Vector2 movementSpeed)
     {
         SetSpaceshipSprite(aiSpaceshipsRow);
+        SetHorizontalMovementBorders(origin, movementRange);
+        SetMovementSpeed(movementSpeed);
         AssignPositionAndRotation(origin, rotation);
         EnableObject();
     }
 
     public void SetHorizontalMovementBorders(Vector3 origin, float movementRange)
     {
-        _aiMovement.SetMinAndMaxHorizontalPositionsOrQueueThemIfAiMovesVertically(origin.x - movementRange, origin.x + movementRange);
+        _aiMovement.SetMinAndMaxHorizontalPositions(origin.x - movementRange, origin.x + movementRange);
+    }
+
+    public void SetMovementSpeed(Vector2 movementSpeed)
+    {
+        _spaceshipMovement.SetMovementSpeed(movementSpeed);
     }
 
     private void OnDisable()

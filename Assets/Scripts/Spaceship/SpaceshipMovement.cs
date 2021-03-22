@@ -13,6 +13,11 @@ public class SpaceshipMovement : MonoBehaviour
     private float _dir;
 
 
+    public void SetMovementSpeed(Vector2 movementSpeed)
+    {
+        _movementSpeed = movementSpeed;
+    }
+
     private void Awake()
     {
         _input = GetComponent<IInput>();    

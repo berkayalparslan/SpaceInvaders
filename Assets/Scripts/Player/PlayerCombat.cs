@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerCombat : MonoBehaviour, IProjectileCombat
+public class PlayerCombat : CombatParticipant
 {
     public event UnityAction OnPlayerDeath;
 
@@ -16,16 +16,18 @@ public class PlayerCombat : MonoBehaviour, IProjectileCombat
         }
     }
 
-    public void ReceiveHit(IProjectileCombat combatSender)
+    protected override bool CanBeHit(ICombatParticipant combatParticipant)
     {
-        if (combatSender.SenderType != ProjectileSender.Player)
-        {
-            gameObject.SetActive(false);
+        return (combatParticipant as PlayerCombat) == null;
+    }
 
-            if (OnPlayerDeath != null)
-            {
-                OnPlayerDeath();
-            }
+    protected override void ProceedWithHit(ICombatParticipant combatParticipant)
+    {
+        gameObject.SetActive(false);
+
+        if (OnPlayerDeath != null)
+        {
+            OnPlayerDeath();
         }
     }
 
@@ -38,4 +40,6 @@ public class PlayerCombat : MonoBehaviour, IProjectileCombat
     {
         OnPlayerDeath -= Managers.Instance.PlayerManager.OnPlayerDeath;
     }
+
+    
 }

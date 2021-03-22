@@ -12,8 +12,11 @@ public class AiSpaceshipsRow : MonoBehaviour
     private const float _leftBorder = -30f;
     private const float _rightBorder = 30f;
     private const int _numberOfSpaceshipsInRow = 10;
+    private readonly Vector2 _defaultMovementSpeed = new Vector2(1, 1);
+
     private List<AiSpaceship> _spaceships = new List<AiSpaceship>();
     private float _maxDistanceFromOriginPerSpaceship;
+    private Vector2 _currentMovementSpeedForSpaceshipsInThisRow;
     private SpaceshipColor _rowSpaceshipColor;
     private SpaceshipType _rowSpaceshipType;
 
@@ -59,7 +62,7 @@ public class AiSpaceshipsRow : MonoBehaviour
         FillSlotsWithSpaceships(numberofSpaceshipsInRow);
     }
 
-    private void Awake()
+    private void Start()
     {
         SortAndSetSpaceshipColorsRandomly();
         SortAndSetSpaceshipTypesRandomly();
@@ -90,7 +93,9 @@ public class AiSpaceshipsRow : MonoBehaviour
     {
         List<SpaceshipType> spaceshipsTypes = new List<SpaceshipType>(SpaceshipHelper.GetSpaceshipTypes());
         int randomIndex = 0;
+
         _typesRandomlySorted.Clear();
+        spaceshipsTypes.Remove(Managers.Instance.PlayerManager.RecentSpaceshipType);
 
         while (spaceshipsTypes.Count > 0)
         {
@@ -125,7 +130,8 @@ public class AiSpaceshipsRow : MonoBehaviour
         AiSpaceship aiSpaceship = null;
         Vector3 origin;
         CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(numberOfSpaceships);
-        
+        CalculateNewMovementSpeedForSpaceshipsInThisRow(numberOfSpaceships);
+
         for (int i = 0; i < numberOfSpaceships; i++)
         {
             spaceshipFromPool = spaceshipsPool.GetPoolObject();
@@ -137,8 +143,7 @@ public class AiSpaceshipsRow : MonoBehaviour
                 if (aiSpaceship != null)
                 {
                     origin = GetOriginPositionByIndex(i, transform);
-                    aiSpaceship.InitSpaceshipBeforeActivating(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship);
-                    aiSpaceship.SetHorizontalMovementBorders(origin, _maxDistanceFromOriginPerSpaceship);
+                    aiSpaceship.InitSpaceshipBeforeActivating(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship, _currentMovementSpeedForSpaceshipsInThisRow);
                     aiSpaceship.OnSpaceshipDisable += OnSpaceshipDisabled;
                     _spaceships.Add(aiSpaceship);
                 }
@@ -151,17 +156,26 @@ public class AiSpaceshipsRow : MonoBehaviour
         return new Vector3(_leftBorder + _maxDistanceFromOriginPerSpaceship * (index + 1) + (index * _maxDistanceFromOriginPerSpaceship), transformForXZAxis.position.y, transform.position.z);
     }
 
-    private void CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(int numberOfSpaceships)
-    {
-        _maxDistanceFromOriginPerSpaceship = Mathf.Abs(_rightBorder - _leftBorder) / numberOfSpaceships * 0.5f;
-    }
-
     private void OnSpaceshipDisabled(AiSpaceship aiSpaceship)
     {
         aiSpaceship.OnSpaceshipDisable -= OnSpaceshipDisabled;
         _spaceships.Remove(aiSpaceship);
         CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(_spaceships.Count);
+        CalculateNewMovementSpeedForSpaceshipsInThisRow(_spaceships.Count);
         UpdateSpaceships();
+    }
+
+    private void CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(int numberOfSpaceships)
+    {
+        _maxDistanceFromOriginPerSpaceship = Mathf.Abs(_rightBorder - _leftBorder) / numberOfSpaceships * 0.5f;
+    }
+
+    private void CalculateNewMovementSpeedForSpaceshipsInThisRow(int numberOfSpaceships)
+    {
+        Vector2 movementSpeed;
+        movementSpeed.x = _defaultMovementSpeed.x + (3 - (numberOfSpaceships / 10f)) * 2f;
+        movementSpeed.y = _defaultMovementSpeed.y + (3 - (numberOfSpaceships / 10f)) * 1.5f;
+        _currentMovementSpeedForSpaceshipsInThisRow = movementSpeed;
     }
 
     private void UpdateSpaceships()
@@ -174,6 +188,7 @@ public class AiSpaceshipsRow : MonoBehaviour
             spaceship = _spaceships[i];
             origin = GetOriginPositionByIndex(i, spaceship.transform);
             spaceship.SetHorizontalMovementBorders(origin, _maxDistanceFromOriginPerSpaceship);
+            spaceship.SetMovementSpeed(_currentMovementSpeedForSpaceshipsInThisRow);
         }
     }
 
