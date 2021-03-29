@@ -15,17 +15,26 @@ public class PlayerManager : MonoBehaviour
     private UiManager _uiManager;
     [SerializeField]
     private PlayerCamera _playerCamera;
-    private SpaceshipColor _recentSpaceshipColor;
-    private SpaceshipType _recentSpaceshipType;
     private short _playerLivesLeft = _maxPlayerLives;
+    private SpaceshipType _playerSpaceshipType;
+    private SpaceshipColor _playerSpaceshipColor;
 
-    public SpaceshipType RecentSpaceshipType
+    public SpaceshipType PlayerSpaceshipType
     {
         get
         {
-            return _recentSpaceshipType;
+            return _playerSpaceshipType;
         }
     }
+
+    public SpaceshipColor PlayerSpaceshipColor
+    {
+        get
+        {
+            return _playerSpaceshipColor;
+        }
+    }
+    
 
     private void Awake()
     {
@@ -37,36 +46,20 @@ public class PlayerManager : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player");
         _resourcesManager = Managers.Instance.ResourcesManager;
         _uiManager = Managers.Instance.UiManager;
-        _uiManager.UiSpaceshipColorButtons.OnSpaceshipColorChange += OnSpaceshipColorChanged;
-        _uiManager.UiSpaceshipTypeSelection.OnSpaceshipTypeChange += OnSpaceshipTypeChanged;
         _uiManager.UiStartMenu.StartGameButton.onClick.AddListener(OnGameStart);
-        _recentSpaceshipColor = SpaceshipColor.Blue;
-        _recentSpaceshipType = SpaceshipType.Default;
     }
 
     private void OnDestroy()
     {
-        _uiManager.UiSpaceshipColorButtons.OnSpaceshipColorChange -= OnSpaceshipColorChanged;
-        _uiManager.UiSpaceshipTypeSelection.OnSpaceshipTypeChange -= OnSpaceshipTypeChanged;
         OnPlayerDeath -= OnPlayerDied;
         _uiManager.UiStartMenu.StartGameButton.onClick.RemoveAllListeners();
     }
 
-    private void OnSpaceshipColorChanged(SpaceshipColor color)
-    {
-        _recentSpaceshipColor = color;
-        UpdateSpaceshipAppearance();
-    }
-
-    private void OnSpaceshipTypeChanged(SpaceshipType spaceshipType)
-    {
-        _recentSpaceshipType = spaceshipType;
-        UpdateSpaceshipAppearance();
-    }
-
     private void OnGameStart()
     {
-        _uiManager.HideMainMenuUi();
+        SetSpaceshipAppearance(_uiManager.UiSpaceshipSelection.RecentSpaceshipType, _uiManager.UiSpaceshipSelection.RecentSpaceshipColor);
+        _uiManager.HideMainMenu();
+        //todo ui manager show ingame hud
         _playerCamera.ChangeCameraToGameView();
         Managers.Instance.GameManager.StartGame();
     }
@@ -96,9 +89,11 @@ public class PlayerManager : MonoBehaviour
         Managers.Instance.GameManager.ContinueGame();
     }
 
-    private void UpdateSpaceshipAppearance()
+    private void SetSpaceshipAppearance(SpaceshipType type, SpaceshipColor color)
     {
-        Sprite sprite = _resourcesManager.GetSpriteBySpaceshipTypeAndColor(_recentSpaceshipType, _recentSpaceshipColor);
+        _playerSpaceshipType = type;
+        _playerSpaceshipColor = color;
+        Sprite sprite = _resourcesManager.GetSpriteBySpaceshipTypeAndColor(type, color);
 
         if (sprite != null)
         {

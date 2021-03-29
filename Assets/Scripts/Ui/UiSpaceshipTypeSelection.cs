@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UiSpaceshipTypeSelection : MonoBehaviour
 {
+    private const SpaceshipType _defaultSpaceshipType = SpaceshipType.Default;
     public event UnityAction<SpaceshipType> OnSpaceshipTypeChange;
 
     [SerializeField]
@@ -13,7 +14,6 @@ public class UiSpaceshipTypeSelection : MonoBehaviour
     [SerializeField]
     private Button _nextTypeButton;
     private SpaceshipType _recentType;
-    private SpaceshipColor _recentColor;
 
 
     public void OnPreviousTypeButtonClicked()
@@ -54,6 +54,10 @@ public class UiSpaceshipTypeSelection : MonoBehaviour
     {
         _previousTypeButton.onClick.AddListener(OnPreviousTypeButtonClicked);
         _nextTypeButton.onClick.AddListener(OnNextTypeButtonClicked);
+    }
+
+    private void Start()
+    {
         Setup();
     }
 
@@ -65,7 +69,7 @@ public class UiSpaceshipTypeSelection : MonoBehaviour
 
     private void Setup()
     {
-        _recentType = SpaceshipType.Default;
+        _recentType = _defaultSpaceshipType;
 
         if (OnSpaceshipTypeChange != null)
         {

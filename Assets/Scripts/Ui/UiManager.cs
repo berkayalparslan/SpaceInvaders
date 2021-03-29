@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
-    public UiSpaceshipColorButtons UiSpaceshipColorButtons;
+    public UiSpaceshipSelection UiSpaceshipSelection;
+    public UiSpaceshipColorSelection UiSpaceshipColorSelection;
     public UiSpaceshipTypeSelection UiSpaceshipTypeSelection;
-    public UiStartMenu UiStartMenu; 
+    public UiStartMenu UiStartMenu;
 
+    [SerializeField]
+    private GameObject MainMenuCanvas;
 
-    public void HideMainMenuUi()
+    public void HideMainMenu()
     {
-        UiSpaceshipColorButtons.gameObject.SetActive(false);
-        UiSpaceshipTypeSelection.gameObject.SetActive(false);
-        UiStartMenu.gameObject.SetActive(false);
+        MainMenuCanvas.SetActive(false);
     }
 }

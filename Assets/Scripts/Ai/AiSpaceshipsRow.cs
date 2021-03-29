@@ -79,7 +79,9 @@ public class AiSpaceshipsRow : MonoBehaviour
     {
         List<SpaceshipColor> spaceshipsColors = new List<SpaceshipColor>(SpaceshipHelper.GetSpaceshipColors());
         int randomIndex = 0;
+
         _colorsRandomlySorted.Clear();
+        spaceshipsColors.Remove(Managers.Instance.PlayerManager.PlayerSpaceshipColor);
 
         while (spaceshipsColors.Count > 0)
         {
@@ -95,7 +97,7 @@ public class AiSpaceshipsRow : MonoBehaviour
         int randomIndex = 0;
 
         _typesRandomlySorted.Clear();
-        spaceshipsTypes.Remove(Managers.Instance.PlayerManager.RecentSpaceshipType);
+        spaceshipsTypes.Remove(Managers.Instance.PlayerManager.PlayerSpaceshipType);
 
         while (spaceshipsTypes.Count > 0)
         {

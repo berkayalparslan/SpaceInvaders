@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UiSpaceshipColorButtons : MonoBehaviour
+public class UiSpaceshipColorSelection : MonoBehaviour
 {
+    private const SpaceshipColor _defaultSpaceshipColor = SpaceshipColor.Blue;
     public event UnityAction<SpaceshipColor> OnSpaceshipColorChange;
     private Dictionary<SpaceshipColor, UiSpaceshipColorButton> _buttons = new Dictionary<SpaceshipColor, UiSpaceshipColorButton>();
     private SpaceshipColor _recentSpaceshipColor;
@@ -13,7 +14,12 @@ public class UiSpaceshipColorButtons : MonoBehaviour
     private void Start()
     {
         UiSpaceshipColorButton[] buttons = transform.GetComponentsInChildren<UiSpaceshipColorButton>();
+        AddClickEventToEachButton(buttons);
+        Setup();
+    }
 
+    private void AddClickEventToEachButton(UiSpaceshipColorButton[] buttons)
+    {
         if (buttons.Length > 0)
         {
             foreach (UiSpaceshipColorButton button in buttons)
@@ -22,7 +28,16 @@ public class UiSpaceshipColorButtons : MonoBehaviour
                 button.OnButtonClick += OnSpaceshipColorButtonClicked;
             }
         }
-        //Setup();
+    }
+
+    private void Setup()
+    {
+        _recentSpaceshipColor = _defaultSpaceshipColor;
+
+        if (OnSpaceshipColorChange != null)
+        {
+            OnSpaceshipColorChange(_recentSpaceshipColor);
+        }
     }
 
     private void OnDestroy()
@@ -31,11 +46,6 @@ public class UiSpaceshipColorButtons : MonoBehaviour
         {
             button.Value.OnButtonClick -= OnSpaceshipColorButtonClicked;
         }
-    }
-
-    private void Setup()
-    {
-        OnSpaceshipColorButtonClicked(SpaceshipColor.Blue);
     }
 
     private void OnSpaceshipColorButtonClicked(SpaceshipColor color)
