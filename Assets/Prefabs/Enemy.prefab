@@ -90,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4bef70488e0b2c42803c9e0e99781a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: {x: 3, y: 3}
 --- !u!114 &7659822671808901000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebd866655fbd60845ae98f9629f97c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spaceshipAppearance: {fileID: 8180586397753845646}
-  _aiMovement: {fileID: 7959066457054094102}
+  _spaceshipSprite: {fileID: 8180586397753845646}
   _spaceshipMovement: {fileID: 6260735618712687157}
+  _aiMovement: {fileID: 7959066457054094102}
 --- !u!1 &4834892807556621268
 GameObject:
   m_ObjectHideFlags: 0

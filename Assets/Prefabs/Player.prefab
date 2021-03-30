@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143a59c363c64ad45920129ab0c46e56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spaceshipAppearance: {fileID: 8294168253829826938}
+  _spaceshipSprite: {fileID: 8294168253829826938}
   _spaceshipMovement: {fileID: 8294168254309267554}
 --- !u!1 &8294168255410551522
 GameObject:
