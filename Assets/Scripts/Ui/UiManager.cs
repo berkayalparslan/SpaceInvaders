@@ -7,7 +7,7 @@ public class UiManager : MonoBehaviour
     public UiSpaceshipSelection UiSpaceshipSelection;
     public UiSpaceshipColorSelection UiSpaceshipColorSelection;
     public UiSpaceshipTypeSelection UiSpaceshipTypeSelection;
-    public UiStartMenu UiStartMenu;
+    public UiGameSettings UiGameSettings;
 
     [SerializeField]
     private GameObject MainMenuCanvas;

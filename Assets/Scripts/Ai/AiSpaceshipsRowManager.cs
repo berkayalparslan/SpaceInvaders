@@ -5,6 +5,13 @@ using UnityEngine;
 public class AiSpaceshipsRowManager : MonoBehaviour
 {
     private List<AiSpaceshipsRow> _rows = new List<AiSpaceshipsRow>();
+    private int _numberOfSpaceshipsPerRow;
+
+
+    public void SetNumberOfSpaceshipsPerRow()
+    {
+        _numberOfSpaceshipsPerRow = Managers.Instance.UiManager.UiGameSettings.NumberOfSpaceshipsPerRow;
+    }
 
     private void Awake()
     {
@@ -18,7 +25,7 @@ public class AiSpaceshipsRowManager : MonoBehaviour
 
         foreach (AiSpaceshipsRow row in _rows)
         {
-            row.InitRow();
+            row.InitRow(_numberOfSpaceshipsPerRow);
         }
     }
 }

@@ -73,6 +73,16 @@ public class Managers : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private AiSpaceshipsRowManager _aiSpaceshipsRowManager;
+    public AiSpaceshipsRowManager AiSpaceshipsRowManager
+    {
+        get
+        {
+            return _aiSpaceshipsRowManager;
+        }
+    }
+
     private void Awake()
     {
         _instance = this;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AiCombat : CombatParticipant
 {
+    [SerializeField]
+    private AiSpaceshipController _aiSpaceship;
     protected override bool CanBeHit(ICombatParticipant combatParticipant)
     {
         return !IsHitBySameTypeOfObject(combatParticipant);
@@ -11,6 +13,6 @@ public class AiCombat : CombatParticipant
 
     protected override void ProceedWithHit(ICombatParticipant combatParticipant)
     {
-        gameObject.SetActive(false);
+        _aiSpaceship.DestroySpaceship();
     }
 }

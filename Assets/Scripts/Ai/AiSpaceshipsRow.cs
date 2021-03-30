@@ -11,10 +11,9 @@ public class AiSpaceshipsRow : MonoBehaviour
     private const float _maxDefaultTimeBetweenVerticalMovements = 10f;
     private const float _leftBorder = -30f;
     private const float _rightBorder = 30f;
-    private const int _numberOfSpaceshipsInRow = 10;
     private readonly Vector2 _defaultMovementSpeed = new Vector2(1, 1);
 
-    private List<AiSpaceship> _spaceships = new List<AiSpaceship>();
+    private List<AiSpaceshipController> _spaceships = new List<AiSpaceshipController>();
     private float _maxDistanceFromOriginPerSpaceship;
     private Vector2 _currentMovementSpeedForSpaceshipsInThisRow;
     private SpaceshipColor _rowSpaceshipColor;
@@ -49,14 +48,8 @@ public class AiSpaceshipsRow : MonoBehaviour
     }
 
 
-    public void InitRow()
+    public void InitRow(int numberofSpaceshipsInRow)
     {
-        int numberofSpaceshipsInRow;
-#if UNITY_EDITOR
-        numberofSpaceshipsInRow = DEBUG_NumberOfSpaceshipsInRow != 0 ? DEBUG_NumberOfSpaceshipsInRow : _numberOfSpaceshipsInRow;
-#else
-        numberofSpaceshipsInRow = _numberOfSpaceshipsInRow;
-#endif
         SetRowSpaceshipColor();
         SetRowSpaceshipType();
         FillSlotsWithSpaceships(numberofSpaceshipsInRow);
@@ -129,7 +122,7 @@ public class AiSpaceshipsRow : MonoBehaviour
     {
         ObjectPool spaceshipsPool = Managers.Instance.SpaceshipsPool;
         GameObject spaceshipFromPool = null;
-        AiSpaceship aiSpaceship = null;
+        AiSpaceshipController aiSpaceship = null;
         Vector3 origin;
         CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(numberOfSpaceships);
         CalculateNewMovementSpeedForSpaceshipsInThisRow(numberOfSpaceships);
@@ -140,13 +133,13 @@ public class AiSpaceshipsRow : MonoBehaviour
 
             if (spaceshipFromPool != null)
             {
-                aiSpaceship = spaceshipFromPool.GetComponent<AiSpaceship>();
+                aiSpaceship = spaceshipFromPool.GetComponent<AiSpaceshipController>();
 
                 if (aiSpaceship != null)
                 {
                     origin = GetOriginPositionByIndex(i, transform);
                     aiSpaceship.InitSpaceshipBeforeActivating(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship, _currentMovementSpeedForSpaceshipsInThisRow);
-                    aiSpaceship.OnSpaceshipDisable += OnSpaceshipDisabled;
+                    aiSpaceship.OnSpaceshipDestroy += OnSpaceshipDisabled;
                     _spaceships.Add(aiSpaceship);
                 }
             }
@@ -158,9 +151,9 @@ public class AiSpaceshipsRow : MonoBehaviour
         return new Vector3(_leftBorder + _maxDistanceFromOriginPerSpaceship * (index + 1) + (index * _maxDistanceFromOriginPerSpaceship), transformForXZAxis.position.y, transform.position.z);
     }
 
-    private void OnSpaceshipDisabled(AiSpaceship aiSpaceship)
+    private void OnSpaceshipDisabled(AiSpaceshipController aiSpaceship)
     {
-        aiSpaceship.OnSpaceshipDisable -= OnSpaceshipDisabled;
+        aiSpaceship.OnSpaceshipDestroy -= OnSpaceshipDisabled;
         _spaceships.Remove(aiSpaceship);
         CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(_spaceships.Count);
         CalculateNewMovementSpeedForSpaceshipsInThisRow(_spaceships.Count);
@@ -182,7 +175,7 @@ public class AiSpaceshipsRow : MonoBehaviour
 
     private void UpdateSpaceships()
     {
-        AiSpaceship spaceship = null;
+        AiSpaceshipController spaceship = null;
         Vector3 origin;
 
         for (int i = 0; i < _spaceships.Count; i++)

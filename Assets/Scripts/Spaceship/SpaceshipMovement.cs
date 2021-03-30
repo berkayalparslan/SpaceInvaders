@@ -8,7 +8,6 @@ public class SpaceshipMovement : MonoBehaviour
     private Vector2 _movementVector;
     private Vector2 _startingPosition;
     private Vector2 _currentPos;
-    [SerializeField]
     private Vector2 _movementSpeed;
     private float _dir;
 
