@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiMovement : MonoBehaviour
+public class AiMovementInput : MovementInput
 {
     private const float _horizontalPositionOffset = 2f;
     private float _timeLeftBeforeNextVerticalMovement;
@@ -10,43 +10,15 @@ public class AiMovement : MonoBehaviour
     private float _verticalPositionChangeDuringVerticalMovement;
     private float _verticalMovementDistance = 1f;
     private float _horizontalMovementDirectionBeforeStartingVerticalMovement;
-    private float _minHorizontalPosition;
-    private float _maxHorizontalPosition;
-    private Vector2 _movementVector;
 
-    public Vector2 MovementVector 
+
+    public override void SetMinAndMaxHorizontalPositions(float minHorizontal, float maxHorizontal)
     {
-        get
-        {
-            return _movementVector;
-        }
+        base.SetMinAndMaxHorizontalPositions(minHorizontal + _horizontalPositionOffset, maxHorizontal - _horizontalPositionOffset);
     }
 
-
-    public void SetMinAndMaxHorizontalPositions(float minHorizontal, float maxHorizontal)
+    protected override void UpdateMovementInput()
     {
-        _minHorizontalPosition = minHorizontal + _horizontalPositionOffset;
-        _maxHorizontalPosition = maxHorizontal - _horizontalPositionOffset;
-    }
-
-    private void OnEnable()
-    {
-        SetMovementVectorForStart();
-        SetTimeBeforeNextVerticalMovement();
-    }
-
-    private void SetMovementVectorForStart()
-    {
-        _movementVector = new Vector2(1f, 0f);
-    }
-
-    private void Update()
-    {
-        if (!Managers.Instance.GameManager.GameIsRunning)
-        {
-            return;
-        }
-
         UpdateVerticalPositionChangeDuringVerticalMovement();
         UpdateTimeCountdownBeforeNextVerticalMovementStartIfNotMovingVertically();
         StopVerticalMovementIfNecessary();
@@ -62,6 +34,17 @@ public class AiMovement : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        SetMovementVectorForStart();
+        SetTimeBeforeNextVerticalMovement();
+    }
+
+    private void SetMovementVectorForStart()
+    {
+        MovementVector = new Vector2(1f, 0f);
+    }
+
     private void UpdateVerticalPositionChangeDuringVerticalMovement()
     {
         _verticalPositionChangeDuringVerticalMovement = Mathf.Abs(transform.position.y - _yPositionBeforeStartingVerticalMovement);
@@ -69,7 +52,7 @@ public class AiMovement : MonoBehaviour
 
     private void UpdateTimeCountdownBeforeNextVerticalMovementStartIfNotMovingVertically()
     {
-        if (_movementVector.y == 0)
+        if (MovementVector.y == 0)
         {
             _timeLeftBeforeNextVerticalMovement -= Time.deltaTime;
         }
@@ -95,7 +78,7 @@ public class AiMovement : MonoBehaviour
 
     private bool MovesVertically()
     {
-        return _movementVector.y != 0;
+        return MovementVector.y != 0;
     }
 
     private bool VerticalPositionWasCachedBeforeStartingVerticalMovement()
@@ -105,25 +88,24 @@ public class AiMovement : MonoBehaviour
 
     private void StopVerticalMovement()
     {
-        _movementVector.x = _horizontalMovementDirectionBeforeStartingVerticalMovement;
-        _movementVector.y = 0f;
+        MovementVector = new Vector2(_horizontalMovementDirectionBeforeStartingVerticalMovement, 0f);
         _yPositionBeforeStartingVerticalMovement = float.MaxValue;
     }
 
     private bool CanMoveHorizontally()
     {
-        return _movementVector.y == 0f;
+        return MovementVector.y == 0f;
     }
 
     private void UpdateMovementVectorForHorizontalMovement()
     {
         if (transform.position.x < _minHorizontalPosition)
         {
-            _movementVector.x = -1f;
+            MovementVector = new Vector2(-1f,MovementVector.y);
         }
         if (transform.position.x > _maxHorizontalPosition)
         {
-            _movementVector.x = 1f;
+            MovementVector = new Vector2(1f, MovementVector.y);
         }
     }
 
@@ -135,8 +117,8 @@ public class AiMovement : MonoBehaviour
     private void StartVerticalMovement()
     {
         SetTimeBeforeNextVerticalMovement();
-        _horizontalMovementDirectionBeforeStartingVerticalMovement = _movementVector.x;
-        _movementVector = new Vector2(0, 1);
+        _horizontalMovementDirectionBeforeStartingVerticalMovement = MovementVector.x;
+        MovementVector = new Vector2(0, 1);
         _yPositionBeforeStartingVerticalMovement = transform.position.y;
     }
 

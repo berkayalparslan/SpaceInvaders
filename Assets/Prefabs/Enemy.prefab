@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spaceshipSprite: {fileID: 8180586397753845646}
   _spaceshipMovement: {fileID: 6260735618712687157}
-  _aiMovement: {fileID: 7959066457054094102}
+  _movementInput: {fileID: 7959066457054094102}
 --- !u!1 &4834892807556621268
 GameObject:
   m_ObjectHideFlags: 0

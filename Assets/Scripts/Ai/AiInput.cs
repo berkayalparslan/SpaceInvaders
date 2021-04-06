@@ -3,53 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AiInput : MonoBehaviour, IInput
+public class AiInput : InputBase
 {
-    private AiShooting _aiShooting;
-    private AiMovement _aiMovement;
-    private Vector2 _movementInput;
-
-    public float HorizontalInput
-    { 
-        get
-        {
-            return _movementInput.x;
-        }
-    }
-    public float VerticalInput 
-    { 
-        get
-        {
-            return _movementInput.y;
-        }        
-    }
-    public bool Firing { get; private set; }
-
-
-    private void Awake()
+    protected override void UpdateFiringInput()
     {
-        _aiShooting = GetComponent<AiShooting>();
-        _aiMovement = GetComponent<AiMovement>();
+        Firing = _shootingInput.Firing;
     }
 
-    private void Update()
+    protected override void UpdateMovementInput()
     {
-        if (!Managers.Instance.GameManager.GameIsRunning)
-        {
-            return;
-        }
-
-        UpdateFiringInput();
-        UpdateMovementInput();
-    }
-
-    private void UpdateFiringInput()
-    {
-        Firing = _aiShooting.Fire;
-    }
-
-    private void UpdateMovementInput()
-    {
-        _movementInput = _aiMovement.MovementVector;
+        HorizontalInput = _movementInput.MovementVector.x;
+        VerticalInput = _movementInput.MovementVector.y;
     }
 }

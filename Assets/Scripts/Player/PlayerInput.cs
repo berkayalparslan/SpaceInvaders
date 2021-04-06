@@ -2,43 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour, IInput
+public class PlayerInput : InputBase
 {
-    private float _horizontalInput;
-    private bool _firing;
-
-    public float HorizontalInput
+    protected override void UpdateFiringInput()
     {
-        get
-        {
-            return _horizontalInput;
-        }
+        Firing = _shootingInput.Firing;
     }
 
-    public float VerticalInput
+    protected override void UpdateMovementInput()
     {
-        get
-        {
-            return 0f;
-        }
-    }
-
-    public bool Firing
-    {
-        get
-        {
-            return _firing;
-        }
-    }
-
-    private void Update()
-    {
-        if (!Managers.Instance.GameManager.GameIsRunning)
-        {
-            return;
-        }
-
-        _horizontalInput = Input.GetAxisRaw("Horizontal");
-        _firing = Input.GetKey(KeyCode.Space);
+        HorizontalInput = _movementInput.MovementVector.x;
     }
 }

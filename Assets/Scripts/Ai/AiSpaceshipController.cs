@@ -7,10 +7,6 @@ public class AiSpaceshipController : SpaceshipController
 {
     public event UnityAction<AiSpaceshipController> OnSpaceshipDestroy;
 
-    [SerializeField]
-    private AiMovement _aiMovement;
-
-
     public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange, Vector2 movementSpeed)
     {
         SetSpaceshipSprite(aiSpaceshipsRow.SpaceshipTypeOnThisRow,aiSpaceshipsRow.SpaceshipColorOnThisRow);
@@ -18,11 +14,6 @@ public class AiSpaceshipController : SpaceshipController
         SetMovementSpeed(movementSpeed);
         AssignPositionAndRotation(origin, rotation);
         EnableObject();
-    }
-
-    public void SetHorizontalMovementBorders(Vector3 origin, float movementRange)
-    {
-        _aiMovement.SetMinAndMaxHorizontalPositions(origin.x - movementRange, origin.x + movementRange);
     }
 
     public void DestroySpaceship()

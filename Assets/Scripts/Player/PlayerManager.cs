@@ -6,10 +6,10 @@ using UnityEngine.Events;
 
 public class PlayerManager : MonoBehaviour
 {
+    private const float _defaultMovementRange = 32.5f;
     public UnityAction OnPlayerDeath;
     private const short _maxPlayerLives = 3;
     private PlayerSpaceshipController _playerSpaceship;
-    private ResourcesManager _resourcesManager;
     private UiManager _uiManager;
     [SerializeField]
     private PlayerCamera _playerCamera;
@@ -38,6 +38,7 @@ public class PlayerManager : MonoBehaviour
     {
         SetSpaceshipAppearance(_uiManager.UiSpaceshipSelection.RecentSpaceshipType, _uiManager.UiSpaceshipSelection.RecentSpaceshipColor);
         SetPlayerHorizontalSpeed(_uiManager.UiGameSettings.PlayerHorizontalSpeed);
+        SetPlayerMovementBorders();
         _uiManager.HideMainMenu();
         //todo ui manager show ingame hud
         _playerCamera.ChangeCameraToGameView();
@@ -56,6 +57,11 @@ public class PlayerManager : MonoBehaviour
         _playerSpaceship.SetMovementSpeed(new Vector2(horizontalSpeed, 0));
     }
 
+    private void SetPlayerMovementBorders()
+    {
+        _playerSpaceship.SetHorizontalMovementBorders(Vector2.zero, _defaultMovementRange);
+    }
+
     private void Awake()
     {
         OnPlayerDeath = new UnityAction(OnPlayerDied);
@@ -64,7 +70,6 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         _playerSpaceship = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerSpaceshipController>();
-        _resourcesManager = Managers.Instance.ResourcesManager;
         _uiManager = Managers.Instance.UiManager;
     }
 

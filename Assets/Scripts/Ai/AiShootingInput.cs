@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiShooting : MonoBehaviour
+public class AiShootingInput : ShootingInput
 {
     private const float _minShootingCooldownTimeInSeconds = 1f;
     private const float _maxShootingCooldownTimeInSeconds = 12f;
@@ -10,24 +10,12 @@ public class AiShooting : MonoBehaviour
     private float _shootingCooldownTimerInSeconds;
     private float _currentCooldownTimeInSeconds;
     private float _verticalDirection;
-    
-    public bool Fire { get; private set; }
 
-    private void OnEnable()
+
+    protected override void UpdateShootingInput()
     {
-        SetCooldownTimeRandomly();
-        UpdateVerticalDirection();
-    }
-
-    private void Update()
-    {
-        if (!Managers.Instance.GameManager.GameIsRunning)
-        {
-            return;
-        }
-
         _shootingCooldownTimerInSeconds += Time.deltaTime;
-        Fire = false;
+        Firing = false;
 
         if (_shootingCooldownTimerInSeconds > _currentCooldownTimeInSeconds)
         {
@@ -35,9 +23,15 @@ public class AiShooting : MonoBehaviour
             if (CanFire())
             {
                 SetCooldownTimeRandomly();
-                Fire = true;
+                Firing = true;
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        SetCooldownTimeRandomly();
+        UpdateVerticalDirection();
     }
 
     private void UpdateVerticalDirection()
@@ -64,5 +58,5 @@ public class AiShooting : MonoBehaviour
             return false;
         }
         return true;
-    }
+    }   
 }
