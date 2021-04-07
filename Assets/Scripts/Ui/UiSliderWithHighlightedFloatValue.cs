@@ -8,4 +8,9 @@ public class UiSliderWithHighlightedFloatValue : UiSliderWithHighlightedValue<fl
     {
         _highlightedSliderValue = value;
     }
+
+    protected override string GetSliderValueFormatted()
+    {
+        return _highlightedSliderValue.ToString("F2");
+    }
 }

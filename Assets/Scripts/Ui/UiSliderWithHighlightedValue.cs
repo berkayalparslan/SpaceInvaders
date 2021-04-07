@@ -23,6 +23,7 @@ public abstract class UiSliderWithHighlightedValue<T> : MonoBehaviour
     }
 
     protected abstract void ConvertAndSetSliderValue(float value);
+    protected abstract string GetSliderValueFormatted();
 
     public void SetDefaultValue(float defaultValue)
     {
@@ -42,6 +43,6 @@ public abstract class UiSliderWithHighlightedValue<T> : MonoBehaviour
     private void UpdateHighlightedValue(float newValue)
     {
         ConvertAndSetSliderValue(newValue);
-        _highlightedValueText.text = _highlightedSliderValue.ToString();
+        _highlightedValueText.text = GetSliderValueFormatted();
     }
 }

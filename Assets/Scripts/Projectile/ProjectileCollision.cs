@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ProjectileCollision : MonoBehaviour
 {
-    private CollisionHandler _collisionHandler;
     private CombatParticipant _projectileSender;
 
     public CombatParticipant ProjectileSender
@@ -21,26 +20,19 @@ public class ProjectileCollision : MonoBehaviour
         _projectileSender = projectileSender;
     }
 
-    private void Awake()
-    {
-        _collisionHandler = GetComponent<CollisionHandler>();
-        _collisionHandler.OnCollisionEnterEvent.AddListener(OnProjectileCollision);
-    }
-
     private void OnDisable()
     {
         _projectileSender = null;
     }
 
-    private void OnProjectileCollision(Collider2D collider)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        CombatParticipant hitCombatParticipant = collider.GetComponent<CombatParticipant>();
+        CombatParticipant hitCombatParticipant = collision.collider.GetComponent<CombatParticipant>();
 
         if (hitCombatParticipant != null)
         {
             hitCombatParticipant.ReceiveHit(_projectileSender);
             gameObject.SetActive(false);
         }
-        
     }
 }

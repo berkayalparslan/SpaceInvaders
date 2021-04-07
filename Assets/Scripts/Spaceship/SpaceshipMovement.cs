@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpaceshipMovement : MonoBehaviour
 {
+    [SerializeField]
+    private Rigidbody2D _rigidbody2D;
     private IInput _input;
     private Vector2 _movementVector;
     private Vector2 _startingPosition;
@@ -28,7 +30,7 @@ public class SpaceshipMovement : MonoBehaviour
         _currentPos = _startingPosition;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!Managers.Instance.GameManager.GameIsRunning)
         {
@@ -39,6 +41,6 @@ public class SpaceshipMovement : MonoBehaviour
         _movementVector.y = _input.VerticalInput;
         _dir = transform.rotation.z == 0 ? 1 : -1;
         _currentPos += Vector2.one * _movementVector * Time.deltaTime * _movementSpeed * _dir;
-        transform.position = _currentPos;
+        _rigidbody2D.MovePosition(_currentPos);
     }
 }

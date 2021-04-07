@@ -9,11 +9,13 @@ public class SpaceshipShooting : MonoBehaviour
     [SerializeField]
     private Transform _projectileReleasePoint;
     private float _shootingCooldown;
+    private CombatParticipant _projectileSender;
 
 
     private void Awake()
     {
         _input = GetComponent<IInput>();
+        _projectileSender = GetComponent<CombatParticipant>();
     }
 
     private void Update()
@@ -36,15 +38,12 @@ public class SpaceshipShooting : MonoBehaviour
 
         if (projectile != null)
         {
-            ProjectileCollision projectileCollision = projectile.GetComponent<ProjectileCollision>();
-            CombatParticipant projectileSender = GetComponent<CombatParticipant>();
+            ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
 
-            if (projectileSender != null)
+            if (projectileController != null)
             {
-                projectileCollision.SetProjectileSender(projectileSender);
-                projectile.transform.position = _projectileReleasePoint.position;
-                projectile.transform.rotation = _projectileReleasePoint.rotation;
-                projectile.SetActive(true);
+                projectileController.InitProjectile(_projectileSender, _projectileReleasePoint.position, _projectileReleasePoint.rotation);
+                projectileController.EnableObject();
             }
         }
     }

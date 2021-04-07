@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ProjectileMovement : MonoBehaviour
 {
+    [SerializeField]
+    private Rigidbody2D _rigidbody2D;
     private Vector3 _direction;
+    private Vector3 _position;
     [SerializeField]
     private float _speed;
 
@@ -12,10 +15,12 @@ public class ProjectileMovement : MonoBehaviour
     private void OnEnable()
     {
         _direction = (transform.eulerAngles.z + 360) % 360 == 180 ? Vector2.down :  Vector2.up;
+        _position = _rigidbody2D.position;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.position += (_direction * Time.deltaTime * _speed);
+        _position += (_direction * Time.deltaTime * _speed);
+        _rigidbody2D.MovePosition(_position);
     }
 }

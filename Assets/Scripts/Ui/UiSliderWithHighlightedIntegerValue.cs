@@ -8,4 +8,9 @@ public class UiSliderWithHighlightedIntegerValue : UiSliderWithHighlightedValue<
     {
         _highlightedSliderValue = (int)value;
     }
+
+    protected override string GetSliderValueFormatted()
+    {
+        return _highlightedSliderValue.ToString();
+    }
 }

@@ -19,14 +19,18 @@ public class PlayerCamera : MonoBehaviour
     private Vector3 _targetPosition;
     private float _targetSize;
     private Camera _camera;
-
+    private WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
+    private IEnumerator _moveCamera;
+    private IEnumerator _zoomCamera;
 
     public void ChangeCameraToGameView()
     {
         _targetPosition = _gamePosition;
         _targetSize = _sizeOnGame;
-        StartCoroutine(MoveCameraToTargetPosition());
-        StartCoroutine(ZoomCameraToTargetSize());
+        _moveCamera = MoveCameraToTargetPosition();
+        _zoomCamera = ZoomCameraToTargetSize();
+        StartCoroutine(_moveCamera);
+        StartCoroutine(_zoomCamera);
     }
 
     private void Awake()
@@ -48,7 +52,8 @@ public class PlayerCamera : MonoBehaviour
         {
             _camera.orthographicSize += differenceBetweenSizes / _zoomingDurationInSeconds * Time.deltaTime;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _camera.orthographicSize, _targetSize);
-            yield return new WaitForEndOfFrame();
+            Debug.Log("zoom camera");
+            yield return _waitForEndOfFrame;
         }
     }
 
@@ -63,7 +68,8 @@ public class PlayerCamera : MonoBehaviour
             currentPosition.x = Mathf.Clamp(currentPosition.x, currentPosition.x, _targetPosition.x);
             currentPosition.y = Mathf.Clamp(currentPosition.y, currentPosition.y, _targetPosition.y);
             transform.position = currentPosition;
-            yield return new WaitForEndOfFrame();
+            Debug.Log("move camera");
+            yield return _waitForEndOfFrame;
         }
     }
 }

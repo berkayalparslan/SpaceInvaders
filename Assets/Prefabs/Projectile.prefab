@@ -92,9 +92,9 @@ GameObject:
   - component: {fileID: 2362062053425789958}
   - component: {fileID: 3613238766412398075}
   - component: {fileID: 8576555720564514972}
+  - component: {fileID: 7727660429437100278}
   - component: {fileID: 5614579926562765450}
   - component: {fileID: 2294955383681236088}
-  - component: {fileID: 2439330841733766414}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Projectile
@@ -154,6 +154,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.3, y: 0.75}
   m_Direction: 0
+--- !u!114 &7727660429437100278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3943425958948991488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63aaf29b4dd41c04998e1119a84ed2e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _projectileCollision: {fileID: 2294955383681236088}
 --- !u!114 &5614579926562765450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147e1cc75637de24a9c9c9025d59be48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidbody2D: {fileID: 3613238766412398075}
   _speed: 20
 --- !u!114 &2294955383681236088
 MonoBehaviour:
@@ -179,33 +193,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 146a082e268b2df44873e30fe8ee8315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2439330841733766414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3943425958948991488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23f4f98de6b4aec429df5a0af6a5a788, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnTriggerEnterEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTriggerStayEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTriggerExitEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnCollisionEnterEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnCollisionStayEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnCollisionExitEvent:
-    m_PersistentCalls:
-      m_Calls: []
