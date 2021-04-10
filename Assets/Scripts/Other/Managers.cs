@@ -33,52 +33,67 @@ public class Managers : MonoBehaviour
         }
     }
 
-    [SerializeField]
     private ResourcesManager _resourcesManager;
     public ResourcesManager ResourcesManager
     {
         get
         {
+            if (_resourcesManager == null)
+            {
+                _resourcesManager = FindObjectOfType<ResourcesManager>();
+            }
             return _resourcesManager;
         }
     }
 
-    [SerializeField]
     private GameManager _gameManager;
     public GameManager GameManager
     {
         get
         {
+            if (_gameManager == null)
+            {
+                _gameManager = FindObjectOfType<GameManager>();
+            }
             return _gameManager;
         }
     }
 
-    [SerializeField]
     private UiManager _uiManager;
     public UiManager UiManager
     {
         get
         {
+            if (_uiManager == null)
+            {
+                _uiManager = FindObjectOfType<UiManager>();
+            }
             return _uiManager;
         }
     }
 
-    [SerializeField]
     private PlayerManager _playerManager;
     public PlayerManager PlayerManager
     {
         get
         {
+            if (_playerManager == null)
+            {
+                _playerManager = FindObjectOfType<PlayerManager>();
+            }
             return _playerManager;
         }
     }
 
-    [SerializeField]
-    private AiSpaceshipsRowManager _aiSpaceshipsRowManager;
-    public AiSpaceshipsRowManager AiSpaceshipsRowManager
+    private AiSpaceshipsRowsManager _aiSpaceshipsRowManager;
+    public AiSpaceshipsRowsManager AiSpaceshipsRowManager
     {
         get
         {
+            if (_aiSpaceshipsRowManager == null)
+            {
+                _aiSpaceshipsRowManager = FindObjectOfType<AiSpaceshipsRowsManager>();
+            }
             return _aiSpaceshipsRowManager;
         }
     }

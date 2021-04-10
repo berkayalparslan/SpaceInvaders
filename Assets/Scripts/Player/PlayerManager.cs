@@ -7,15 +7,18 @@ using UnityEngine.Events;
 public class PlayerManager : MonoBehaviour
 {
     private const float _defaultMovementRange = 32.5f;
-    public UnityAction OnPlayerDeath;
-    private const short _maxPlayerLives = 3;
+    private const short _numberOfLivesForPlayer = 3;
+
     private PlayerSpaceshipController _playerSpaceship;
     private UiManager _uiManager;
     [SerializeField]
     private PlayerCamera _playerCamera;
-    private short _playerLivesLeft = _maxPlayerLives;
     private SpaceshipType _playerSpaceshipType;
     private SpaceshipColor _playerSpaceshipColor;
+    private WaitForSeconds _waitBeforeRespawn = new WaitForSeconds(2f);
+    private IEnumerator _respawnAfterWaiting;
+
+    public UnityAction OnPlayerDeath;
 
     public SpaceshipType PlayerSpaceshipType
     {
@@ -39,10 +42,17 @@ public class PlayerManager : MonoBehaviour
         SetSpaceshipAppearance(_uiManager.UiSpaceshipSelection.RecentSpaceshipType, _uiManager.UiSpaceshipSelection.RecentSpaceshipColor);
         SetPlayerHorizontalSpeed(_uiManager.UiGameSettings.PlayerHorizontalSpeed);
         SetPlayerMovementBorders();
+        SetPlayerLives(_numberOfLivesForPlayer);
         _uiManager.HideMainMenu();
         //todo ui manager show ingame hud
         _playerCamera.ChangeCameraToGameView();
         Managers.Instance.GameManager.StartGame();
+    }
+
+    public void PauseAndContinueGameAfterPlayerRespawn()
+    {
+        Managers.Instance.GameManager.PauseGameAndContinueWithDelay();
+        RespawnWithDelay();
     }
 
     private void SetSpaceshipAppearance(SpaceshipType spaceshipType, SpaceshipColor spaceshipColor)
@@ -62,9 +72,14 @@ public class PlayerManager : MonoBehaviour
         _playerSpaceship.SetHorizontalMovementBorders(Vector2.zero, _defaultMovementRange);
     }
 
+    private void SetPlayerLives(short numberOfLives)
+    {
+        _playerSpaceship.SetNumberOfLives(numberOfLives);
+    }
+
     private void Awake()
     {
-        OnPlayerDeath = new UnityAction(OnPlayerDied);
+        _respawnAfterWaiting = RespawnAfterWaiting();
     }
 
     private void Start()
@@ -73,33 +88,14 @@ public class PlayerManager : MonoBehaviour
         _uiManager = Managers.Instance.UiManager;
     }
 
-    private void OnDestroy()
+    private void RespawnWithDelay()
     {
-        OnPlayerDeath -= OnPlayerDied;
+        StartCoroutine(_respawnAfterWaiting);
     }
 
-    private void OnPlayerDied()
+    private IEnumerator RespawnAfterWaiting()
     {
-        _playerLivesLeft--;
-
-        if (!HasLivesLeft())
-        {
-            //gameover
-            return;
-        }
-        StartCoroutine(PauseGameAndContinueWithDelay());
-    }
-
-    private bool HasLivesLeft()
-    {
-        return _playerLivesLeft > 0;
-    }
-
-    private IEnumerator PauseGameAndContinueWithDelay()
-    {
-        Managers.Instance.GameManager.PauseGame();
-        yield return new WaitForSeconds(2);
+        yield return _waitBeforeRespawn;
         _playerSpaceship.gameObject.SetActive(true);
-        Managers.Instance.GameManager.ContinueGame();
     }
 }

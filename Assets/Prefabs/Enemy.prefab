@@ -14,10 +14,11 @@ GameObject:
   - component: {fileID: 3914124476126876990}
   - component: {fileID: 6260735618712687157}
   - component: {fileID: 7659822671808901000}
-  - component: {fileID: -6084525726713956032}
   - component: {fileID: -1300956751201365125}
   - component: {fileID: 7959066457054094102}
   - component: {fileID: -8220455711486486110}
+  - component: {fileID: 1707703803078573763}
+  - component: {fileID: 6836537229870049855}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -126,19 +127,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileReleasePoint: {fileID: 1746980308335785823}
---- !u!114 &-6084525726713956032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916058924453870794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1d3ef91f8e621b41bc5321b3cbf83fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _aiSpaceship: {fileID: -8220455711486486110}
 --- !u!114 &-1300956751201365125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +166,33 @@ MonoBehaviour:
   _spaceshipSprite: {fileID: 8180586397753845646}
   _spaceshipMovement: {fileID: 6260735618712687157}
   _movementInput: {fileID: 7959066457054094102}
+  _spaceshipHealth: {fileID: 1707703803078573763}
+--- !u!114 &1707703803078573763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916058924453870794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4922acbc1d9c644a299e6f69e965e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6836537229870049855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916058924453870794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53e0f559bf98b4b45aece64b820e4f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spaceshipHealth: {fileID: 1707703803078573763}
+  _spaceshipController: {fileID: -8220455711486486110}
 --- !u!1 &4834892807556621268
 GameObject:
   m_ObjectHideFlags: 0

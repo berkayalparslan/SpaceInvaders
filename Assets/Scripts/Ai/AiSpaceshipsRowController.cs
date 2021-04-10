@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiSpaceshipsRow : MonoBehaviour
+public class AiSpaceshipsRowController : MonoBehaviour
 {
     private static Stack<SpaceshipType> _typesRandomlySorted = new Stack<SpaceshipType>();
     private static Stack<SpaceshipColor> _colorsRandomlySorted = new Stack<SpaceshipColor>();
@@ -16,6 +16,7 @@ public class AiSpaceshipsRow : MonoBehaviour
     private List<AiSpaceshipController> _spaceships = new List<AiSpaceshipController>();
     private float _maxDistanceFromOriginPerSpaceship;
     private Vector2 _currentMovementSpeedForSpaceshipsInThisRow;
+    private short _numberOfLives;
     private SpaceshipColor _rowSpaceshipColor;
     private SpaceshipType _rowSpaceshipType;
 
@@ -48,10 +49,11 @@ public class AiSpaceshipsRow : MonoBehaviour
     }
 
 
-    public void InitRow(int numberofSpaceshipsInRow)
+    public void InitRow(int numberofSpaceshipsInRow, short numberOfLives)
     {
         SetRowSpaceshipColor();
         SetRowSpaceshipType();
+        _numberOfLives = numberOfLives;
         FillSlotsWithSpaceships(numberofSpaceshipsInRow);
     }
 
@@ -138,7 +140,7 @@ public class AiSpaceshipsRow : MonoBehaviour
                 if (aiSpaceship != null)
                 {
                     origin = GetOriginPositionByIndex(i, transform);
-                    aiSpaceship.InitSpaceshipBeforeActivating(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship, _currentMovementSpeedForSpaceshipsInThisRow);
+                    aiSpaceship.InitSpaceshipAndActivateIt(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship, _currentMovementSpeedForSpaceshipsInThisRow, _numberOfLives);
                     aiSpaceship.OnSpaceshipDestroy += OnSpaceshipDisabled;
                     _spaceships.Add(aiSpaceship);
                 }

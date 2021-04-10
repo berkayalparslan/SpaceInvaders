@@ -786,11 +786,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectilesPool: {fileID: 1672680075}
   _spaceshipsPool: {fileID: 2047408629}
-  _resourcesManager: {fileID: 818228102}
-  _gameManager: {fileID: 368606264}
-  _uiManager: {fileID: 329791280}
-  _playerManager: {fileID: 677058119}
-  _aiSpaceshipsRowManager: {fileID: 2108402333}
 --- !u!4 &831111381
 Transform:
   m_ObjectHideFlags: 0

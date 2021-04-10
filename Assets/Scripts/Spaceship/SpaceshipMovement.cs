@@ -14,7 +14,7 @@ public class SpaceshipMovement : MonoBehaviour
     private float _dir;
 
 
-    public void SetMovementSpeed(Vector2 movementSpeed)
+    public void SetMovementSpeed(Vector2 movementSpeed) 
     {
         _movementSpeed = movementSpeed;
     }

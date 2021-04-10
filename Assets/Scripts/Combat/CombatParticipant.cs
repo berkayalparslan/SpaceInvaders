@@ -4,20 +4,20 @@ using UnityEngine;
 
 public abstract class CombatParticipant : MonoBehaviour, ICombatParticipant
 {
-    protected abstract bool CanBeHit(ICombatParticipant combatParticipant);
-    protected abstract void ProceedWithHit(ICombatParticipant combatParticipant);
+    protected abstract bool CanReceiveHit(ICombatParticipant attackingCombatParticipant);
+    protected abstract void ProceedWithHit(ICombatParticipant attackingCombatParticipant);
 
     
-    public void ReceiveHit(ICombatParticipant combatParticipant)
+    public void ReceiveHit(ICombatParticipant attackingCombatParticipant)
     {
-        if (CanBeHit(combatParticipant))
+        if (CanReceiveHit(attackingCombatParticipant))
         {
-            ProceedWithHit(combatParticipant);
+            ProceedWithHit(attackingCombatParticipant);
         }
     }
 
-    protected bool IsHitBySameTypeOfObject(ICombatParticipant combatParticipant)
+    protected bool IsHitBySameTypeOfObject(ICombatParticipant attackingCombatParticipant)
     {
-        return combatParticipant.GetType() == GetType();
+        return attackingCombatParticipant.GetType() == GetType();
     }
 }

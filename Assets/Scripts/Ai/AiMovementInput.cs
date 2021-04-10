@@ -124,6 +124,6 @@ public class AiMovementInput : MovementInput
 
     private void SetTimeBeforeNextVerticalMovement()
     {
-        _timeLeftBeforeNextVerticalMovement = AiSpaceshipsRow.TimeBetweenVerticalMovements;
+        _timeLeftBeforeNextVerticalMovement = AiSpaceshipsRowController.TimeBetweenVerticalMovements;
     }
 }

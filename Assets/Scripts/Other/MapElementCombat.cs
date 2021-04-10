@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapElementCombat : CombatParticipant
 {
-    protected override bool CanBeHit(ICombatParticipant combatParticipant)
+    protected override bool CanReceiveHit(ICombatParticipant combatParticipant)
     {
         return (combatParticipant as MapElementCombat) == null;
     }

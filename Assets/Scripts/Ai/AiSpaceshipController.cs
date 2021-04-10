@@ -7,23 +7,22 @@ public class AiSpaceshipController : SpaceshipController
 {
     public event UnityAction<AiSpaceshipController> OnSpaceshipDestroy;
 
-    public void InitSpaceshipBeforeActivating(AiSpaceshipsRow aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange, Vector2 movementSpeed)
+    public void InitSpaceshipAndActivateIt(AiSpaceshipsRowController aiSpaceshipsRow, Vector3 origin, Quaternion rotation,float movementRange, Vector2 movementSpeed, short numberOfLives)
     {
         SetSpaceshipSprite(aiSpaceshipsRow.SpaceshipTypeOnThisRow,aiSpaceshipsRow.SpaceshipColorOnThisRow);
         SetHorizontalMovementBorders(origin, movementRange);
         SetMovementSpeed(movementSpeed);
+        SetNumberOfLives(numberOfLives);
         AssignPositionAndRotation(origin, rotation);
-        EnableObject();
+        gameObject.SetActive(true);
     }
 
-    public void DestroySpaceship()
+    public override void ProcessSpaceshipHit()
     {
-        if (OnSpaceshipDestroy != null)
+        if(!_spaceshipHealth.IsAlive)
         {
-            OnSpaceshipDestroy(this);
+            DestroySpaceship();
         }
-        OnSpaceshipDestroy = null;
-        Destroy(gameObject);
     }
 
     private void AssignPositionAndRotation(Vector3 position, Quaternion rotation)
@@ -32,8 +31,13 @@ public class AiSpaceshipController : SpaceshipController
         this.transform.rotation = rotation;
     }
 
-    private void EnableObject()
+    private void DestroySpaceship()
     {
-        gameObject.SetActive(true);
+        if (OnSpaceshipDestroy != null)
+        {
+            OnSpaceshipDestroy(this);
+        }
+        OnSpaceshipDestroy = null;
+        Destroy(gameObject);
     }
 }

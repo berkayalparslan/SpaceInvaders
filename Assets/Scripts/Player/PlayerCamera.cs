@@ -52,7 +52,6 @@ public class PlayerCamera : MonoBehaviour
         {
             _camera.orthographicSize += differenceBetweenSizes / _zoomingDurationInSeconds * Time.deltaTime;
             _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, _camera.orthographicSize, _targetSize);
-            Debug.Log("zoom camera");
             yield return _waitForEndOfFrame;
         }
     }
@@ -68,7 +67,6 @@ public class PlayerCamera : MonoBehaviour
             currentPosition.x = Mathf.Clamp(currentPosition.x, currentPosition.x, _targetPosition.x);
             currentPosition.y = Mathf.Clamp(currentPosition.y, currentPosition.y, _targetPosition.y);
             transform.position = currentPosition;
-            Debug.Log("move camera");
             yield return _waitForEndOfFrame;
         }
     }

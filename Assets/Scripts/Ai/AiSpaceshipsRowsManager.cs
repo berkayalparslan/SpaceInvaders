@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiSpaceshipsRowManager : MonoBehaviour
+public class AiSpaceshipsRowsManager : MonoBehaviour
 {
-    private List<AiSpaceshipsRow> _rows = new List<AiSpaceshipsRow>();
+    private List<AiSpaceshipsRowController> _rows = new List<AiSpaceshipsRowController>();
     private int _numberOfSpaceshipsPerRow;
-
+    private const short _numberOfLivesForAiSpaceships = 1;
 
     public void SetNumberOfSpaceshipsPerRow()
     {
@@ -21,11 +21,11 @@ public class AiSpaceshipsRowManager : MonoBehaviour
     private void OnGameStart()
     {
         Managers.Instance.GameManager.OnGameStart -= OnGameStart;
-        _rows.AddRange(GetComponentsInChildren<AiSpaceshipsRow>());
+        _rows.AddRange(GetComponentsInChildren<AiSpaceshipsRowController>());
 
-        foreach (AiSpaceshipsRow row in _rows)
+        foreach (AiSpaceshipsRowController row in _rows)
         {
-            row.InitRow(_numberOfSpaceshipsPerRow);
+            row.InitRow(_numberOfSpaceshipsPerRow, _numberOfLivesForAiSpaceships);
         }
     }
 }

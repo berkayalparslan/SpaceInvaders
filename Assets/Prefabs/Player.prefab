@@ -108,10 +108,11 @@ GameObject:
   - component: {fileID: 8294168254309267581}
   - component: {fileID: 8294168254309267554}
   - component: {fileID: 8294168254309267582}
-  - component: {fileID: 3376294818852182253}
   - component: {fileID: 9116941372767087529}
   - component: {fileID: 8848847616772115758}
   - component: {fileID: 8138777865314772141}
+  - component: {fileID: 6126124088260630247}
+  - component: {fileID: 7506330139546467153}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -220,18 +221,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileReleasePoint: {fileID: 8294168255410551549}
---- !u!114 &3376294818852182253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8294168254309267555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db7d01875a8a24143b35c08cf9cf2c38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &9116941372767087529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +236,7 @@ MonoBehaviour:
   _spaceshipSprite: {fileID: 8294168253829826938}
   _spaceshipMovement: {fileID: 8294168254309267554}
   _movementInput: {fileID: 8848847616772115758}
+  _spaceshipHealth: {fileID: 6126124088260630247}
 --- !u!114 &8848847616772115758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,6 +261,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df349ce5fb2b8744189e6ea0e6af1c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6126124088260630247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8294168254309267555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e4922acbc1d9c644a299e6f69e965e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7506330139546467153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8294168254309267555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53e0f559bf98b4b45aece64b820e4f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spaceshipHealth: {fileID: 6126124088260630247}
+  _spaceshipController: {fileID: 9116941372767087529}
 --- !u!1 &8294168255410551522
 GameObject:
   m_ObjectHideFlags: 0
