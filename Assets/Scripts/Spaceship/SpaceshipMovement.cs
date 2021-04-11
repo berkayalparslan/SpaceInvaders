@@ -30,6 +30,13 @@ public class SpaceshipMovement : MonoBehaviour
         _currentPos = _startingPosition;
     }
 
+    private void Update()
+    {
+        _movementVector.x = _input.HorizontalInput;
+        _movementVector.y = _input.VerticalInput;
+        _dir = transform.rotation.z == 0 ? 1 : -1;
+    }
+
     private void FixedUpdate()
     {
         if (!Managers.Instance.GameManager.GameIsRunning)
@@ -37,9 +44,6 @@ public class SpaceshipMovement : MonoBehaviour
             return;
         }
 
-        _movementVector.x = _input.HorizontalInput;
-        _movementVector.y = _input.VerticalInput;
-        _dir = transform.rotation.z == 0 ? 1 : -1;
         _currentPos += Vector2.one * _movementVector * Time.deltaTime * _movementSpeed * _dir;
         _rigidbody2D.MovePosition(_currentPos);
     }

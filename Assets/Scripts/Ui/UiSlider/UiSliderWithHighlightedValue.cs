@@ -12,7 +12,6 @@ public abstract class UiSliderWithHighlightedValue<T> : MonoBehaviour
     private Slider _slider;
     [SerializeField]
     private TMP_Text _highlightedValueText;
-    
 
     public T HighlightedValue
     {
@@ -28,6 +27,7 @@ public abstract class UiSliderWithHighlightedValue<T> : MonoBehaviour
     public void SetDefaultValue(float defaultValue)
     {
         _slider.value = defaultValue;
+        UpdateHighlightedValue(defaultValue);
     }
 
     private void OnEnable()

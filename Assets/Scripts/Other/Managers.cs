@@ -98,6 +98,19 @@ public class Managers : MonoBehaviour
         }
     }
 
+    private PlayerScoreManager _playerScoreManager;
+    public PlayerScoreManager PlayerScoreManager
+    {
+        get
+        {
+            if (_playerScoreManager == null)
+            {
+                _playerScoreManager = FindObjectOfType<PlayerScoreManager>();
+            }
+            return _playerScoreManager;
+        }
+    }
+
     private void Awake()
     {
         _instance = this;

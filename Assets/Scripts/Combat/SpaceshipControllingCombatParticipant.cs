@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class SpaceshipControllingCombatParticipant : CombatParticipant
 {
-    [SerializeField]
     private SpaceshipHealth _spaceshipHealth;
-    [SerializeField]
     private SpaceshipController _spaceshipController;
+    private SpaceshipSound _spaceshipSound;
+
+    private void Awake()
+    {
+        _spaceshipHealth = GetComponent<SpaceshipHealth>();
+        _spaceshipController = GetComponent<SpaceshipController>();
+        _spaceshipSound = GetComponent<SpaceshipSound>();
+    }
 
     protected override bool CanReceiveHit(ICombatParticipant attackingCombatParticipant)
     {
@@ -22,6 +28,7 @@ public class SpaceshipControllingCombatParticipant : CombatParticipant
 
     protected override void ProceedWithHit(ICombatParticipant attackingCombatParticipant)
     {
+        _spaceshipSound.PlayReceivedHitSound();
         _spaceshipHealth.DecreaseNumberOfLives();
         _spaceshipController.ProcessSpaceshipHit();
     }

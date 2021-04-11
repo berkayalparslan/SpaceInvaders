@@ -21,6 +21,7 @@ public class AiSpaceshipController : SpaceshipController
     {
         if(!_spaceshipHealth.IsAlive)
         {
+            Managers.Instance.PlayerScoreManager.AddScoreForKill();
             DestroySpaceship();
         }
     }

@@ -20,6 +20,11 @@ public class ProjectileMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!Managers.Instance.GameManager.GameIsRunning)
+        {
+            return;
+        }
+
         _position += (_direction * Time.deltaTime * _speed);
         _rigidbody2D.MovePosition(_position);
     }

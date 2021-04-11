@@ -38,6 +38,7 @@ public class ObjectPool : MonoBehaviour
     private void InitPool()
     {
         _poolObjects = new List<GameObject>(_poolSize);
+
         for (int i = 0; i < _poolSize; i++)
         {
             GameObject obj = InstantiatePoolObject();

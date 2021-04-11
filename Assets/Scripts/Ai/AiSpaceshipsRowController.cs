@@ -141,7 +141,7 @@ public class AiSpaceshipsRowController : MonoBehaviour
                 {
                     origin = GetOriginPositionByIndex(i, transform);
                     aiSpaceship.InitSpaceshipAndActivateIt(this, origin, transform.rotation, _maxDistanceFromOriginPerSpaceship, _currentMovementSpeedForSpaceshipsInThisRow, _numberOfLives);
-                    aiSpaceship.OnSpaceshipDestroy += OnSpaceshipDisabled;
+                    aiSpaceship.OnSpaceshipDestroy += OnSpaceshipDestroy;
                     _spaceships.Add(aiSpaceship);
                 }
             }
@@ -153,9 +153,9 @@ public class AiSpaceshipsRowController : MonoBehaviour
         return new Vector3(_leftBorder + _maxDistanceFromOriginPerSpaceship * (index + 1) + (index * _maxDistanceFromOriginPerSpaceship), transformForXZAxis.position.y, transform.position.z);
     }
 
-    private void OnSpaceshipDisabled(AiSpaceshipController aiSpaceship)
+    private void OnSpaceshipDestroy(AiSpaceshipController aiSpaceship)
     {
-        aiSpaceship.OnSpaceshipDestroy -= OnSpaceshipDisabled;
+        aiSpaceship.OnSpaceshipDestroy -= OnSpaceshipDestroy;
         _spaceships.Remove(aiSpaceship);
         CalculateMaxDistanceFromOriginForSpaceshipsInThisRow(_spaceships.Count);
         CalculateNewMovementSpeedForSpaceshipsInThisRow(_spaceships.Count);

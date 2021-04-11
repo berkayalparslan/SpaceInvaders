@@ -11,6 +11,9 @@ public class MapElementCombat : CombatParticipant
 
     protected override void ProceedWithHit(ICombatParticipant combatParticipant)
     {
-        gameObject.SetActive(false);
+        if (!gameObject.CompareTag("MapBorder"))
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

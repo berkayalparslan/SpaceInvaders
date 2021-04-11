@@ -32,7 +32,11 @@ public class ProjectileCollision : MonoBehaviour
         if (hitCombatParticipant != null)
         {
             hitCombatParticipant.ReceiveHit(_projectileSender);
-            gameObject.SetActive(false);
         }
+        else
+        {
+            collision.gameObject.SetActive(false);
+        }
+        gameObject.SetActive(false);
     }
 }

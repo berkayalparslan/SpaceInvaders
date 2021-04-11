@@ -11,12 +11,15 @@ public class PlayerSpaceshipController : SpaceshipController
 
     public override void ProcessSpaceshipHit()
     {
+        gameObject.SetActive(false);
+        Managers.Instance.UiManager.UiPlayerHud.DecreasePlayerLife();
+        Managers.Instance.PlayerScoreManager.SubScoreForReceivingHit();
+
         if (!_spaceshipHealth.IsAlive)
         {
-            //gameover
+            Managers.Instance.PlayerManager.EndGame();
             return;
         }
-        gameObject.SetActive(false);
         Managers.Instance.PlayerManager.PauseAndContinueGameAfterPlayerRespawn();
     }
 }

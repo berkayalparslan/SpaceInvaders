@@ -16,7 +16,6 @@ public class PlayerManager : MonoBehaviour
     private SpaceshipType _playerSpaceshipType;
     private SpaceshipColor _playerSpaceshipColor;
     private WaitForSeconds _waitBeforeRespawn = new WaitForSeconds(2f);
-    private IEnumerator _respawnAfterWaiting;
 
     public UnityAction OnPlayerDeath;
 
@@ -39,11 +38,16 @@ public class PlayerManager : MonoBehaviour
 
     public void StartGame()
     {
-        SetSpaceshipAppearance(_uiManager.UiSpaceshipSelection.RecentSpaceshipType, _uiManager.UiSpaceshipSelection.RecentSpaceshipColor);
-        SetPlayerHorizontalSpeed(_uiManager.UiGameSettings.PlayerHorizontalSpeed);
+        float playerSpeed = _uiManager.UiGameSettings.PlayerHorizontalSpeed;
+        int numberOfAiSpaceshipsPerRow = _uiManager.UiGameSettings.NumberOfSpaceshipsPerRow;
+
+        SetSpaceshipAppearanceOnPlayerAndUi(_uiManager.UiSpaceshipSelection.RecentSpaceshipType, _uiManager.UiSpaceshipSelection.RecentSpaceshipColor);
+        SetPlayerHorizontalSpeed(playerSpeed);
         SetPlayerMovementBorders();
         SetPlayerLives(_numberOfLivesForPlayer);
+        Managers.Instance.PlayerScoreManager.SetScoreMultipliers(playerSpeed, numberOfAiSpaceshipsPerRow);
         _uiManager.HideMainMenu();
+        _uiManager.ShowIngameHud();
         //todo ui manager show ingame hud
         _playerCamera.ChangeCameraToGameView();
         Managers.Instance.GameManager.StartGame();
@@ -55,11 +59,21 @@ public class PlayerManager : MonoBehaviour
         RespawnWithDelay();
     }
 
-    private void SetSpaceshipAppearance(SpaceshipType spaceshipType, SpaceshipColor spaceshipColor)
+    public void EndGame()
+    {
+        int playerScore = Managers.Instance.PlayerScoreManager.Score;
+        int playerHighestScore = Managers.Instance.PlayerScoreManager.HighestScore;
+        Managers.Instance.PlayerScoreManager.SaveIfPlayerAchievedNewHighestRecord();
+        Managers.Instance.GameManager.EndGame();
+        _uiManager.UiGameover.ShowPlayerScoreAndHighScore(playerScore, playerHighestScore);
+    }
+
+    private void SetSpaceshipAppearanceOnPlayerAndUi(SpaceshipType spaceshipType, SpaceshipColor spaceshipColor)
     {
         _playerSpaceshipType = spaceshipType;
         _playerSpaceshipColor = spaceshipColor;
         _playerSpaceship.InitSpaceshipBeforeActivating(spaceshipType, spaceshipColor);
+        _uiManager.UiPlayerHud.InstantiatePlayerSpaceshipImagesAndSetTheirSprites(spaceshipType, spaceshipColor, _numberOfLivesForPlayer);
     }
 
     private void SetPlayerHorizontalSpeed(float horizontalSpeed)
@@ -77,11 +91,6 @@ public class PlayerManager : MonoBehaviour
         _playerSpaceship.SetNumberOfLives(numberOfLives);
     }
 
-    private void Awake()
-    {
-        _respawnAfterWaiting = RespawnAfterWaiting();
-    }
-
     private void Start()
     {
         _playerSpaceship = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerSpaceshipController>();
@@ -90,12 +99,21 @@ public class PlayerManager : MonoBehaviour
 
     private void RespawnWithDelay()
     {
-        StartCoroutine(_respawnAfterWaiting);
+        StopCoroutine(RespawnAfterWaiting());
+        StartCoroutine(RespawnAfterWaiting());
     }
 
     private IEnumerator RespawnAfterWaiting()
     {
         yield return _waitBeforeRespawn;
         _playerSpaceship.gameObject.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (Managers.Instance.GameManager.GameIsOver && Input.anyKeyDown)
+        {
+            Managers.Instance.GameManager.RestartGame();
+        }
     }
 }
