@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMovementInput : MovementInput
 {
     private float _horizontalInput;
-
+    
+    
     protected override void UpdateMovementInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");

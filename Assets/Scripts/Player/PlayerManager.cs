@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour
     private SpaceshipType _playerSpaceshipType;
     private SpaceshipColor _playerSpaceshipColor;
     private WaitForSeconds _waitBeforeRespawn = new WaitForSeconds(2f);
+    private SpaceshipSound _playerSpaceshipSound;
 
     public UnityAction OnPlayerDeath;
 
@@ -51,6 +52,16 @@ public class PlayerManager : MonoBehaviour
         //todo ui manager show ingame hud
         _playerCamera.ChangeCameraToGameView();
         Managers.Instance.GameManager.StartGame();
+    }
+
+    public void PlayExplosionSound()
+    {
+        _playerSpaceshipSound.PlayExplosionSound();
+    }
+
+    public void PlayShootingSound()
+    {
+        _playerSpaceshipSound.PlayShootingSound();
     }
 
     public void PauseAndContinueGameAfterPlayerRespawn()
@@ -95,6 +106,7 @@ public class PlayerManager : MonoBehaviour
     {
         _playerSpaceship = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerSpaceshipController>();
         _uiManager = Managers.Instance.UiManager;
+        _playerSpaceshipSound = GetComponent<SpaceshipSound>();
     }
 
     private void RespawnWithDelay()

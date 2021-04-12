@@ -12,5 +12,6 @@ public class PlayerInput : InputBase
     protected override void UpdateMovementInput()
     {
         HorizontalInput = _movementInput.MovementVector.x;
+        VerticalInput = _movementInput.MovementVector.y;
     }
 }

@@ -14,6 +14,7 @@ public class PlayerSpaceshipController : SpaceshipController
         gameObject.SetActive(false);
         Managers.Instance.UiManager.UiPlayerHud.DecreasePlayerLife();
         Managers.Instance.PlayerScoreManager.SubScoreForReceivingHit();
+        Managers.Instance.PlayerManager.PlayExplosionSound();
 
         if (!_spaceshipHealth.IsAlive)
         {
