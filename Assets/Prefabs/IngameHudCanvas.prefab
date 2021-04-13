@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ab2e8b05cda49b46bc42e76d17f1ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _endGameText: {fileID: 2806745298744589843}
   _restartInfoText: {fileID: 3233470129787375272}
   _playerScoreText: {fileID: 4915084705261914519}
   _playerHighestScoreText: {fileID: 6631482923076403216}
@@ -1156,7 +1157,7 @@ GameObject:
   - component: {fileID: 4797258495115824299}
   - component: {fileID: 2806745298744589843}
   m_Layer: 0
-  m_Name: GameoverText
+  m_Name: EndGameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

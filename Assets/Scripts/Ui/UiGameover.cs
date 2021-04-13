@@ -6,6 +6,11 @@ using System;
 
 public class UiGameover : MonoBehaviour
 {
+    private const string _gameLostText = "Game over!";
+    private const string _gameWonText = "Victory!";
+
+    [SerializeField]
+    private TMP_Text _endGameText;
     [SerializeField]
     private TMP_Text _restartInfoText;
     [SerializeField]
@@ -17,6 +22,11 @@ public class UiGameover : MonoBehaviour
     [SerializeField]
     private GameObject _escapeMenuButton;
 
+
+    public void SetEndGameText(bool wonGame)
+    {
+        _endGameText.text = wonGame ? _gameWonText : _gameLostText;
+    }
 
     public void ShowPlayerScoreAndHighScore(int score, int highestScore)
     {

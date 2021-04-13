@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AiSpaceshipsRowController : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class AiSpaceshipsRowController : MonoBehaviour
     private short _numberOfLives;
     private SpaceshipColor _rowSpaceshipColor;
     private SpaceshipType _rowSpaceshipType;
+
+    public event UnityAction<AiSpaceshipsRowController> AllSpaceshipsDestroyed;
 
 #if UNITY_EDITOR
     public int DEBUG_NumberOfSpaceshipsInRow;
@@ -177,6 +180,14 @@ public class AiSpaceshipsRowController : MonoBehaviour
 
     private void UpdateSpaceships()
     {
+        if (_spaceships.Count == 0)
+        {
+            if (AllSpaceshipsDestroyed != null)
+            {
+                AllSpaceshipsDestroyed(this);
+                return;
+            }
+        }
         AiSpaceshipController spaceship = null;
         Vector3 origin;
 

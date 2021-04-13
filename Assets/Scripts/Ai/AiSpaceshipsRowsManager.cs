@@ -38,6 +38,18 @@ public class AiSpaceshipsRowsManager : MonoBehaviour
         foreach (AiSpaceshipsRowController row in _rows)
         {
             row.InitRow(_numberOfSpaceshipsPerRow, _numberOfLivesForAiSpaceships);
+            row.AllSpaceshipsDestroyed += AllSpaceshipsDestroyedOnRow;
+        }
+    }
+
+    private void AllSpaceshipsDestroyedOnRow(AiSpaceshipsRowController aiSpaceshipsRowController)
+    {
+        aiSpaceshipsRowController.AllSpaceshipsDestroyed -= AllSpaceshipsDestroyedOnRow;
+        _rows.Remove(aiSpaceshipsRowController);
+
+        if (_rows.Count == 0)
+        {
+            Managers.Instance.PlayerManager.EndGame(true);
         }
     }
 }

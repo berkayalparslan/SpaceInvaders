@@ -18,7 +18,7 @@ public class PlayerSpaceshipController : SpaceshipController
 
         if (!_spaceshipHealth.IsAlive)
         {
-            Managers.Instance.PlayerManager.EndGame();
+            Managers.Instance.PlayerManager.EndGame(false);
             return;
         }
         Managers.Instance.PlayerManager.PauseAndContinueGameAfterPlayerRespawn();

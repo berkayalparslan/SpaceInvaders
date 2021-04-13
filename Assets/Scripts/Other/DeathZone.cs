@@ -16,7 +16,7 @@ public class DeathZone : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            Managers.Instance.PlayerManager.EndGame();
+            Managers.Instance.PlayerManager.EndGame(false);
         }
     }
 }

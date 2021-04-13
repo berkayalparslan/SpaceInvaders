@@ -70,12 +70,13 @@ public class PlayerManager : MonoBehaviour
         RespawnWithDelay();
     }
 
-    public void EndGame()
+    public void EndGame(bool wonGame)
     {
         int playerScore = Managers.Instance.PlayerScoreManager.Score;
         int playerHighestScore = Managers.Instance.PlayerScoreManager.HighestScore;
         Managers.Instance.PlayerScoreManager.SaveIfPlayerAchievedNewHighestRecord();
         Managers.Instance.GameManager.EndGame();
+        _uiManager.UiGameover.SetEndGameText(wonGame);
         _uiManager.UiGameover.ShowPlayerScoreAndHighScore(playerScore, playerHighestScore);
     }
 
